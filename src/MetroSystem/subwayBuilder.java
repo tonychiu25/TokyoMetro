@@ -48,7 +48,7 @@ public class subwayBuilder {
                     
                 }
             }*/
-			sIndex++;
+			sIndex++;s
         }
 		
    }
