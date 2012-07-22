@@ -80,15 +80,15 @@ public abstract class GenericSubway {
 		} else if(s2 == null) {
 			throw new Exception("Station "+s2Index+" doest not exists");
 		} else if(checkConnected(s1, s2)) {
-			System.out.println("Station "+s1Index+" & Station "+s2Index+" are already connected");
+			//System.out.println("Station "+s1Index+" & Station "+s2Index+" are already connected");
 		} else if(s1.equals(s2)) {
-			System.out.println("Warning : trying to connect the same stations");
+			//System.out.println("Warning : trying to connect the same stations");
 		} else {
 			railway r = new railway(distance, cost, time, s1, s2);
 			railLines.add(r);
 			s1.addNeighbourStation(s2, r);
 			s2.addNeighbourStation(s1, r);
-			System.out.println("Successfully Connected Station "+s2Index+" to "+s1Index);
+			//System.out.println("Successfully Connected Station "+s2Index+" to "+s1Index);
 		}
 	}
 	
@@ -114,6 +114,12 @@ public abstract class GenericSubway {
 	public ArrayList<railway> getRails() {
 		return railLines;
 	}
+	
+	public void printSubway() {
+		for (station s : subway.values()) {
+			s.printNeighborStation();
+		}
+	}
 		
 	public static void main(String args[]) {
 		
@@ -125,7 +131,7 @@ public abstract class GenericSubway {
 		
 		Iterator it = (Iterator) ss.iterator();
 		while(it.hasNext()) {
-			System.out.println(it.next());
+			//System.out.println(it.next());
 		}
 		
 		

@@ -42,27 +42,27 @@ public class MSTMetro extends graph<station, railway>{
         private stationsMediator stationMediator;
         private ArrayList<railway> MSTedges;
         
-	public MSTMetro() {
-            	stationMediator = new stationsMediator();
-		nodes = new HashMap<>();
-		edges = new ArrayList<>();
-                MSTedges = new ArrayList<>();
+        public MSTMetro() {
+        	stationMediator = new stationsMediator();
+        	nodes = new HashMap<>();
+        	edges = new ArrayList<>();
+        	MSTedges = new ArrayList<>();
         }
 	
 
-	public void addNode(Integer sIndex) {
-		if (!checkNodeExists(sIndex)) {
-			station station = new station(sIndex);
-			nodes.put(sIndex, station);
-		}
-	}
-        
-        private boolean checkCycle() {
-            
-            return false;
+        public void addNode(Integer sIndex) {
+				if (!checkNodeExists(sIndex)) {
+				station station = new station(sIndex);
+				nodes.put(sIndex, station);
+			}
         }
         
-        private subwaySystem kruskalAlgorithm() {
+        private boolean checkCycle() {
+        	
+        	return false;
+  	  }
+        
+   	 private subwaySystem kruskalAlgorithm() {
                 
 		/*Iterator<Integer> stationIndexIt = MSTStations.keySet().iterator();
 		GenericSubway MSTSubway = new MetroSystem.subwaySystem(stationIndexIt.next());
@@ -89,7 +89,7 @@ public class MSTMetro extends graph<station, railway>{
 				e.printStackTrace();
 			}
 		}*/
-		return null;
-	}
+   		 return null;
+   	 }
         
 }
