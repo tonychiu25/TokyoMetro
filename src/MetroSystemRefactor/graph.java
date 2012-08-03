@@ -20,6 +20,22 @@ abstract class graph<N, E> {
 	public void setEdgeSet(List<E> edgeSet) {
 		edges = edgeSet;
 	}
+        
+        public void setStationMediator(stationsMediator sm) {
+            stationMediator = sm;
+        }
+        
+        public Map<Integer, N> getNodeSet() {
+            return nodes;
+        }
+        
+        public List<E> getEdgeSet() {
+            return edges;
+        }
+        
+        public stationsMediator getStationMediator() {
+            return this.stationMediator;
+        }
 	
 	public boolean checkNodeExists(Integer nIndex) {
 		return nodes.containsKey(nIndex);

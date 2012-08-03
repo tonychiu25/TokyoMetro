@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import Algorithms.GraphAlgorithms;
 import MetroSystem.GenericSubway;
-import java.util.Comparator;
-import java.util.Iterator;
+import java.util.*;
 
 class railComparitor implements Comparator {
         
@@ -39,16 +38,15 @@ class railComparitor implements Comparator {
 }
 
 public class MSTMetro extends graph<station, railway>{
-        private stationsMediator stationMediator;
-        private ArrayList<railway> MSTedges;
-        
+    
+        subwaySystem mstSub;
+    
 	public MSTMetro() {
             	stationMediator = new stationsMediator();
 		nodes = new HashMap<>();
 		edges = new ArrayList<>();
-                MSTedges = new ArrayList<>();
+                mstSub = new subwaySystem();
         }
-	
 
 	public void addNode(Integer sIndex) {
 		if (!checkNodeExists(sIndex)) {
@@ -57,13 +55,40 @@ public class MSTMetro extends graph<station, railway>{
 		}
 	}
         
-        private boolean checkCycle() {
-            
+        public boolean checkCycle(Integer lastAddedNodeIndex) {
+            Queue <Integer> q = new LinkedList();
+            HashSet<Integer> visited = new HashSet();
+            HashSet<Integer> neighbours;
+            HashMap<Integer, Integer> parent = new HashMap();
+            stationsMediator tmpMediator = stationMediator;
+                
+            q.add(lastAddedNodeIndex);
+            while (q.size() > 0) {
+                Integer currentIndex = q.poll();
+                visited.add(currentIndex);
+                neighbours = tmpMediator.getNeighbourStations(currentIndex);
+                for (Integer nIndex : neighbours) {
+                    if (parent.get(currentIndex) != nIndex) {
+                      parent.put(nIndex, currentIndex);
+                    }
+                    if (visited.contains(nIndex) && parent.get(currentIndex) != nIndex && currentIndex != lastAddedNodeIndex) {
+                        System.out.println(nIndex);
+                        return true;
+                    } else if(parent.get(currentIndex) != nIndex){
+                        q.add(nIndex);
+                    }
+                }
+            }
+
             return false;
         }
         
         private subwaySystem kruskalAlgorithm() {
-                
+            mstSub.setNodeSet(nodes);
+            mstSub.setEdgeSet(edges);
+            for(railway r:edges) {
+                System.out.println(r.getLength());
+            }
 		/*Iterator<Integer> stationIndexIt = MSTStations.keySet().iterator();
 		GenericSubway MSTSubway = new MetroSystem.subwaySystem(stationIndexIt.next());
 		GenericSubway MSTSubwayTmp;

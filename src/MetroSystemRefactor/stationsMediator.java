@@ -19,11 +19,17 @@ public class stationsMediator {
 		} else {
 			neighbourIndexSet = stationsIndexMapping.get(targetStation);
 			if (neighbourIndexSet.add(neighbourStation)) {
-				System.out.println("Station "+neighbourStation+" was already added as a neighbour to station "+targetStation);
+				//System.out.println("Station "+neighbourStation+" was already added as a neighbour to station "+targetStation);
 			}
 			stationsIndexMapping.put(targetStation, neighbourIndexSet);
 		}
 	}
+        
+        public void removeConnection(Integer sIndex, Integer eIndex) {
+            HashSet<Integer> neighbours = stationsIndexMapping.get(sIndex);
+            neighbours.remove(eIndex);
+            stationsIndexMapping.put(sIndex, neighbours);
+        }
 	
 	public HashSet<Integer> getNeighbourStations(Integer targetStationIndex) {
 		HashSet<Integer> neighbouringStations = null;
