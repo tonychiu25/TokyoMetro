@@ -1,8 +1,11 @@
 package MetroSystem;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.ArrayList;
+import java.util.Queue;
 import java.util.SortedSet;
+import java.util.Stack;
 import java.util.TreeSet;
 
 import java.util.Iterator;
@@ -13,6 +16,68 @@ public class subwaySystem extends GenericSubway {
 		super(startStationIndex);
 	}
 
+	public ArrayList<railway> findShortestPath(Integer startIndex, Integer endIndex) {
+		HashMap<Integer, Integer> parentMap = new HashMap<Integer, Integer>();
+		ArrayList<railway> path = new ArrayList<railway>();
+		Stack<railway> prePath = new Stack<railway>();
+		Map<station, railway> neighbours = subway.get(startIndex).getNeighborStation();
+		
+		Queue<Integer> q = new LinkedList<Integer>();
+		q.add(startIndex);
+		parentMap.put(startIndex, -1);
+		while (q.size() > 0) {
+			Integer sIndex = q.poll();
+			station s = subway.get(sIndex);
+			for (station ns: s.getNeighborStation().keySet()) {
+				if (parentMap.get(sIndex) == ns.getStationIndex()) {
+					continue;
+				} else {
+					Integer nsIndex = ns.getStationIndex();
+					parentMap.put(nsIndex, sIndex);
+					if (nsIndex == endIndex) {
+						// Unwind
+						Integer homeIndex = sIndex;
+						station currentStation = ns;
+						while(homeIndex != startIndex) {
+							railway r = currentStation.getNeighborStation().get(homeIndex);
+							System.out.println("ASD");
+							prePath.push(r);
+							Integer nextStationIndex = parentMap.get(currentStation.getStationIndex());
+							currentStation = subway.get(nextStationIndex);
+							homeIndex = parentMap.get(homeIndex);
+						}
+						
+						while(!prePath.empty()) {
+							path.add(prePath.pop());
+						}
+						
+						return path;
+					} else {
+						q.add(nsIndex);
+					}
+				}
+			}
+ 		}
+		/*ArrayList<railway> rails = new ArrayList<railway>();
+		Map<station, railway> neighbours = subway.get(startIndex).getNeighborStation();
+		for (station s : neighbours.keySet()) {
+			// base case
+			if (s.getStationIndex() == endIndex) {
+				railway r = neighbours.get(s);
+				rails.add(r);
+				return rails;
+			} else {
+				
+				rails.addAll(findShortestPath(s.getStationIndex(), endIndex));
+				break;
+			}
+		}
+		
+		return rails;*/
+		
+		return null;
+	}
+	
 	// Add a station to the metrosystem without connecting it to any other stations
 	public void addStation(int stationIndex) throws Exception {
 		if (subway.containsKey(stationIndex)) {
@@ -20,7 +85,6 @@ public class subwaySystem extends GenericSubway {
 		} else {
 			station newStation = new station(stationIndex);
 			subway.put(stationIndex, newStation);
-			System.out.println("Added Station" + stationIndex);
 		}
 	}
 		

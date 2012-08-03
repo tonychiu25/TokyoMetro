@@ -18,7 +18,6 @@ import java.util.*;
 public class GraphAlgorithms {
     
 	public static boolean checkCycle(Map<Integer, station> stations, List<railway> edges) throws Exception {
-		System.out.println(edges.size());
 		if (edges.size() <= 1) {
 			return false;
 		}
@@ -44,7 +43,6 @@ public class GraphAlgorithms {
 					return true;
 				}
 				if(!visted.contains(neighbourIndex)) {
-				  System.out.println("Added To Queue");
 				  queue.add(neighbourIndex);
 				}
 			}

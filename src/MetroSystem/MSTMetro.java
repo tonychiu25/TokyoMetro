@@ -44,11 +44,24 @@ public class MSTMetro {
 	private List<railway> sortedLinks;
 	private Map<Integer, station> MSTStations;
 	private List<railway> MSTLinks;
- 	
+	
+	public void printMST() {
+		/*for(station s : MSTStations.values()) {
+			System.out.print(s.getStationIndex());
+			System.out.print(" Neighbours :{");
+			Map<station, railway> neighbours = s.getNeighborStation();
+			for (station sNeighibour : neighbours.keySet()) {
+				System.out.print(sNeighibour.getStationIndex()+",");
+			}
+			System.out.println("");
+		}*/
+		System.out.println(MSTStations.size());
+	}
+	
 	public MSTMetro(subwaySystem sub, String type) throws Exception {
 		Map<Integer, station> subwaySystem = sub.getSubway();
 		ArrayList<railway> rails = sub.getRails();
-		if (!type.matches("d")) {
+		if (type != "d" && type != "t" && type != "c") {
 			throw new Exception("Invalid MST type :"+" only {d,t,c} are allowed!");
 		}
 		sortedLinks = new ArrayList<railway>();
@@ -80,10 +93,10 @@ public class MSTMetro {
 	}
 	
 	// TODO Rewrite Kruskal
-	private GenericSubway kruskalAlgorithm() {
+	public subwaySystem kruskalAlgorithm() {
 		Iterator<Integer> stationIndexIt = MSTStations.keySet().iterator();
-		GenericSubway MSTSubway = new subwaySystem(stationIndexIt.next());
-		GenericSubway MSTSubwayTmp;
+		subwaySystem MSTSubway = new subwaySystem(stationIndexIt.next());
+		subwaySystem MSTSubwayTmp;
 		while (stationIndexIt.hasNext()) {
 			try {
 				MSTSubway.addStation(stationIndexIt.next());

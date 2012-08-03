@@ -3,7 +3,7 @@ import java.util.List;
 import java.util.Map;
 
 abstract class graph<N, E> {
-        protected stationsMediator stationMediator;
+    protected stationsMediator stationMediator;
 	protected Map<Integer, N> nodes;
 	protected List<E> edges;
 	

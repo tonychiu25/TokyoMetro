@@ -38,7 +38,7 @@ class railComparitor implements Comparator {
 }
 
 public class MSTMetro extends graph<station, railway>{
-    
+
         subwaySystem mstSub;
     
 	public MSTMetro() {
@@ -46,14 +46,15 @@ public class MSTMetro extends graph<station, railway>{
 		nodes = new HashMap<>();
 		edges = new ArrayList<>();
                 mstSub = new subwaySystem();
+
         }
 
-	public void addNode(Integer sIndex) {
-		if (!checkNodeExists(sIndex)) {
-			station station = new station(sIndex);
-			nodes.put(sIndex, station);
-		}
-	}
+        public void addNode(Integer sIndex) {
+				if (!checkNodeExists(sIndex)) {
+				station station = new station(sIndex);
+				nodes.put(sIndex, station);
+			}
+        }
         
         public boolean checkCycle(Integer lastAddedNodeIndex) {
             Queue <Integer> q = new LinkedList();
@@ -83,12 +84,7 @@ public class MSTMetro extends graph<station, railway>{
             return false;
         }
         
-        private subwaySystem kruskalAlgorithm() {
-            mstSub.setNodeSet(nodes);
-            mstSub.setEdgeSet(edges);
-            for(railway r:edges) {
-                System.out.println(r.getLength());
-            }
+   	private subwaySystem kruskalAlgorithm() {
 		/*Iterator<Integer> stationIndexIt = MSTStations.keySet().iterator();
 		GenericSubway MSTSubway = new MetroSystem.subwaySystem(stationIndexIt.next());
 		GenericSubway MSTSubwayTmp;
@@ -114,7 +110,7 @@ public class MSTMetro extends graph<station, railway>{
 				e.printStackTrace();
 			}
 		}*/
-		return null;
-	}
+   		 return null;
+   	 }
         
 }
