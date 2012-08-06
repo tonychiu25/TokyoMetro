@@ -75,5 +75,9 @@ public class stationsMediator {
                 }
                 System.out.println("}");
             }
-        } 
+        }
+        
+        public Map<Integer, HashSet<Integer>> getStationsMediator() {
+            return stationsIndexMapping;
+        }
 }

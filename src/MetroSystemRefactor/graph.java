@@ -1,4 +1,5 @@
 package MetroSystemRefactor;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -40,5 +41,13 @@ abstract class graph<N, E> {
 	public boolean checkNodeExists(Integer nIndex) {
 		return nodes.containsKey(nIndex);
 	}
-	
+        
+        public boolean checkComplete() {
+            boolean complete = true;
+            ArrayList<Integer> connectedNode = stationMediator.getStationsMediator().keySet;
+            for (Integer sIndex : nodes.keySet()) {
+                if (!stationMediator.g)
+            }
+            return true;
+        }
 }

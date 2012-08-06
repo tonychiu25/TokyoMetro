@@ -15,12 +15,12 @@ class railComparitor implements Comparator {
 	}
 	
 	public int compare(Object arg0, Object arg1) {
-		MetroSystem.railway r1 = (MetroSystem.railway) arg0;
-		MetroSystem.railway r2 = (MetroSystem.railway) arg1;
+		MetroSystemRefactor.railway r1 = (MetroSystemRefactor.railway) arg0;
+		MetroSystemRefactor.railway r2 = (MetroSystemRefactor.railway) arg1;
 		int diff = 0;
 
 		if (compareType == "d") {
-			diff = r1.getlength() - r2.getlength();
+			diff = r1.getLength() - r2.getLength();
 		} else if (compareType == "t") {
 			diff = r1.getTime() - r2.getTime();
 		} else if (compareType == "c") {
@@ -40,13 +40,14 @@ class railComparitor implements Comparator {
 public class MSTMetro extends graph<station, railway>{
 
         subwaySystem mstSub;
+        private List<MetroSystemRefactor.railway> sortedLinks;
     
 	public MSTMetro() {
+                sortedLinks = new ArrayList<>();
             	stationMediator = new stationsMediator();
 		nodes = new HashMap<>();
 		edges = new ArrayList<>();
                 mstSub = new subwaySystem();
-
         }
 
         public void addNode(Integer sIndex) {
@@ -85,6 +86,9 @@ public class MSTMetro extends graph<station, railway>{
         }
         
    	private subwaySystem kruskalAlgorithm() {
+            sortedLinks.addAll(edges);
+            Collections.sort(sortedLinks, new railComparitor("d"));
+            
 		/*Iterator<Integer> stationIndexIt = MSTStations.keySet().iterator();
 		GenericSubway MSTSubway = new MetroSystem.subwaySystem(stationIndexIt.next());
 		GenericSubway MSTSubwayTmp;
