@@ -20,7 +20,7 @@ public class subwaySystem extends graph<station, railway>{
 		}
 	}
 	
-	public void connectStations(Integer s1Index, Integer s2Index, railway r) throws Exception {
+	public void connectStations(Integer s1Index, Integer s2Index, Integer distance, Integer cost, Integer time) throws Exception {
 		if(!checkNodeExists(s1Index)) {
 			throw new Exception("Station "+s1Index+" does not exist");
 		} else if(!checkNodeExists(s2Index)) {
@@ -30,9 +30,15 @@ public class subwaySystem extends graph<station, railway>{
 		stationMediator.addNeighbouringStation(s1Index, s2Index);
 		stationMediator.addNeighbouringStation(s2Index, s1Index);
 		
+                railway r = new railway(distance, cost, time);
 		r.setEnds(s1Index, s2Index);
 		edges.add(r);
 	}
+        
+        public void disconnectStations(Integer s1Index, Integer s2Index) {
+            stationMediator.removeConnection(s2Index, s1Index);
+            stationMediator.removeConnection(s1Index, s2Index);
+        } 
         
         public void printNeighbouringStations() {
             stationMediator.printStationNeighbours();

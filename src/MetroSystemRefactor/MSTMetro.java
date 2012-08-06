@@ -5,6 +5,8 @@ import java.util.HashMap;
 import Algorithms.GraphAlgorithms;
 import MetroSystem.GenericSubway;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 class railComparitor implements Comparator {
         
@@ -85,9 +87,43 @@ public class MSTMetro extends graph<station, railway>{
             return false;
         }
         
-   	private subwaySystem kruskalAlgorithm() {
+   	public subwaySystem kruskalAlgorithm() {
             sortedLinks.addAll(edges);
             Collections.sort(sortedLinks, new railComparitor("d"));
+            /*mstSub.setNodeSet(nodes);
+            mstSub.setEdgeSet(edges);
+            
+            for(railway r: sortedLinks) {
+                Integer s1Index = r.getEnds()[0];
+                Integer s2Index = r.getEnds()[1];
+                try {
+                    System.out.println(s1Index + ":" + s2Index);
+                    mstSub.connectStations(s1Index, s2Index, r);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                
+                if (checkCycle(s1Index, mstSub.getStationMediator())) {
+                    mstSub.disconnectStations(s1Index, s2Index);
+                }
+            }
+            mstSub.getStationMediator().printStationNeighbours();*/
+            for(railway r : edges) {
+                //System.out.println(r.getEnds()[0] + ":" + r.getEnds()[1]);
+            }
+            //while(!checkComplete()) {
+                for (railway r: sortedLinks) {
+                    Integer s1Index = r.getEnds()[0];
+                    Integer s2Index = r.getEnds()[1];
+                    stationMediator.addNeighbouringStation(s1Index, s2Index);
+                    stationMediator.addNeighbouringStation(s2Index, s1Index);
+                    if (checkCycle(s1Index)) {
+                        stationMediator.removeConnection(s1Index, s2Index);
+                        stationMediator.removeConnection(s2Index, s1Index);
+                    }
+                }
+                //stationMediator.printStationNeighbours();
+            //}
             
 		/*Iterator<Integer> stationIndexIt = MSTStations.keySet().iterator();
 		GenericSubway MSTSubway = new MetroSystem.subwaySystem(stationIndexIt.next());
@@ -115,6 +151,6 @@ public class MSTMetro extends graph<station, railway>{
 			}
 		}*/
    		 return null;
-   	 }
+        }
         
 }

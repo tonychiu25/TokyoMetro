@@ -2,6 +2,7 @@ package MetroSystemRefactor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 abstract class graph<N, E> {
     protected stationsMediator stationMediator;
@@ -43,11 +44,13 @@ abstract class graph<N, E> {
 	}
         
         public boolean checkComplete() {
-            boolean complete = true;
-            ArrayList<Integer> connectedNode = stationMediator.getStationsMediator().keySet;
-            for (Integer sIndex : nodes.keySet()) {
-                if (!stationMediator.g)
-            }
-            return true;
+            Set<Integer> connectedNode = stationMediator.getStationsMediator().keySet();
+            Set<Integer> nodesSet = nodes.keySet();
+            /*for (Integer sIndex : nodes.keySet()) {
+                if (!connectedNode.contains(sIndex)) {
+                    
+                }
+            }*/
+            return connectedNode.equals(nodesSet);
         }
 }
