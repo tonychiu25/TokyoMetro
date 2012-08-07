@@ -7,7 +7,8 @@ import MetroSystemRefactor.railway;
 public class subwaySystem extends graph<station, railway>{
 	// nodes in superclass replaced stations.
         HashMap<String, ArrayList<Integer>> metroLines;
-    
+        stationsMediator stationMediator;
+        
 	public subwaySystem() {
 		stationMediator = new stationsMediator();
 		nodes = new HashMap();

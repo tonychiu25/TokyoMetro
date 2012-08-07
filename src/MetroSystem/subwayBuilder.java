@@ -33,9 +33,9 @@ public class subwayBuilder {
     public void buildSubwayFromCSV(String filepath) throws Exception {
         CSVReader reader = null;
         CSVReader reader2 = null;
-		try {
-			reader = new CSVReader(new FileReader(filepath));
-			reader2 = new CSVReader(new FileReader(filepath));
+        try {
+            reader = new CSVReader(new FileReader(filepath));
+            reader2 = new CSVReader(new FileReader(filepath));
         } catch (IOException e) {
 			System.out.println("Invalid File Path");
 			e.printStackTrace();
@@ -87,7 +87,7 @@ public class subwayBuilder {
     	subwayBuilder subBuilder = new subwayBuilder();
     	subwaySystem sub = null;
     	try {
-			subBuilder.buildSubwayFromCSV("C:/Users/tonychiu/workspace/TokyoMetro/SubwayMaps/Book1.csv");
+			subBuilder.buildSubwayFromCSV("C:/Users/chiu.sintung/workspace/TokyoMetro/SubwayMaps/Book1.csv");
 			subwaySystem MSTDistance = subBuilder.getDistanceMSTMetro();
 			//System.out.println(MSTDistance.getRails().size());
 			ArrayList<railway> path = MSTDistance.findShortestPath(1, 3);

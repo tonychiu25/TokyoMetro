@@ -36,24 +36,65 @@ class railComparitor implements Comparator {
 public class MSTMetro extends graph<station, railway>{
 
         private List<MetroSystemRefactor.railway> sortedLinks;
-    
+        private stationsMediator stationMediator, mstDistanceMediator, mstTimeMediator, mstCostMediator;
+        
 	public MSTMetro() {
                 sortedLinks = new ArrayList<>();
             	stationMediator = new stationsMediator();
+                mstDistanceMediator = new stationsMediator();
+                mstTimeMediator = new stationsMediator();
+                mstCostMediator = new stationsMediator();
+                
 		nodes = new HashMap<>();
 		edges = new ArrayList<>();
         }
 
         public void addNode(Integer sIndex) {
-				if (!checkNodeExists(sIndex)) {
-				station station = new station(sIndex);
-				nodes.put(sIndex, station);
-			}
+            if (!checkNodeExists(sIndex)) {
+                station station = new station(sIndex);
+                nodes.put(sIndex, station);
+            }
         }
         
-        public ArrayList<station> getPath() {
+        public stationsMediator getStationMediator() {
+            return stationMediator;
+        }
+        
+        public LinkedList<Integer> getShortestPath(Integer s1Index, Integer s2Index) {
+            LinkedList<Integer> path = new LinkedList();
+            HashMap<Integer, Integer> parent = new HashMap();
+            HashSet<Integer> neighbours;
+            Queue<Integer> q = new LinkedList();
+            Integer currentIndex = s1Index;
+            boolean exitwhile = false;
             
-            return null;
+            q.add(currentIndex);
+            while (q.size() > 0) {
+                currentIndex = q.poll();
+                neighbours = stationMediator.getNeighbourStations(currentIndex);
+                for(Integer n:neighbours) {
+                    if (n != parent.get(currentIndex)) {
+                        q.add(n);
+                        parent.put(n, currentIndex);
+                        if (n == s2Index) {
+                            exitwhile = true;
+                            break;
+                        } 
+                    }
+                }
+                
+                if (exitwhile) {
+                    break;
+                }
+            }
+            
+            while (!path.contains(s1Index)) {
+                path.addFirst(currentIndex);
+                currentIndex = parent.get(currentIndex);
+            }
+            path.add(s2Index);
+            
+            return path;
         }
         
         public boolean checkCycle(Integer lastAddedNodeIndex) {

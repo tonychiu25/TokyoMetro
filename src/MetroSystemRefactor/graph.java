@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Set;
 
 abstract class graph<N, E> {
-    protected stationsMediator stationMediator;
 	protected Map<Integer, N> nodes;
 	protected List<E> edges;
 	
@@ -23,20 +22,12 @@ abstract class graph<N, E> {
 		edges = edgeSet;
 	}
         
-        public void setStationMediator(stationsMediator sm) {
-            stationMediator = sm;
-        }
-        
         public Map<Integer, N> getNodeSet() {
             return nodes;
         }
         
         public List<E> getEdgeSet() {
             return edges;
-        }
-        
-        public stationsMediator getStationMediator() {
-            return this.stationMediator;
         }
 	
 	public boolean checkNodeExists(Integer nIndex) {
