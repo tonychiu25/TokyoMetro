@@ -6,11 +6,13 @@ import MetroSystemRefactor.railway;
 
 public class subwaySystem extends graph<station, railway>{
 	// nodes in superclass replaced stations.
-	
+        HashMap<String, ArrayList<Integer>> metroLines;
+    
 	public subwaySystem() {
 		stationMediator = new stationsMediator();
-		nodes = new HashMap<Integer, station>();
-		edges = new ArrayList<railway>();
+		nodes = new HashMap();
+		edges = new ArrayList();
+                metroLines = new HashMap();
 	}
 	
 	public void addNode(Integer sIndex) {

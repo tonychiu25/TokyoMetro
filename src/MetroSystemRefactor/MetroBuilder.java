@@ -7,8 +7,6 @@ public class MetroBuilder {
 		subway.addNode(2);
 		subway.addNode(3);
                 subway.addNode(4);
-		railway r = new railway(1, 1, 1);
-                railway r1 = new railway(2, 1, 1);
 		try {
 			subway.connectStations(1, 2, 1, 1, 1);
                         subway.connectStations(2, 3, 1, 2, 3);

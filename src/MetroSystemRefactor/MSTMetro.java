@@ -1,12 +1,6 @@
 package MetroSystemRefactor;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import Algorithms.GraphAlgorithms;
-import MetroSystem.GenericSubway;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 class railComparitor implements Comparator {
         
@@ -41,7 +35,6 @@ class railComparitor implements Comparator {
 
 public class MSTMetro extends graph<station, railway>{
 
-        subwaySystem mstSub;
         private List<MetroSystemRefactor.railway> sortedLinks;
     
 	public MSTMetro() {
@@ -49,7 +42,6 @@ public class MSTMetro extends graph<station, railway>{
             	stationMediator = new stationsMediator();
 		nodes = new HashMap<>();
 		edges = new ArrayList<>();
-                mstSub = new subwaySystem();
         }
 
         public void addNode(Integer sIndex) {
@@ -57,6 +49,11 @@ public class MSTMetro extends graph<station, railway>{
 				station station = new station(sIndex);
 				nodes.put(sIndex, station);
 			}
+        }
+        
+        public ArrayList<station> getPath() {
+            
+            return null;
         }
         
         public boolean checkCycle(Integer lastAddedNodeIndex) {

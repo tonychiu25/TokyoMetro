@@ -43,14 +43,7 @@ abstract class graph<N, E> {
 		return nodes.containsKey(nIndex);
 	}
         
-        public boolean checkComplete() {
-            Set<Integer> connectedNode = stationMediator.getStationsMediator().keySet();
-            Set<Integer> nodesSet = nodes.keySet();
-            /*for (Integer sIndex : nodes.keySet()) {
-                if (!connectedNode.contains(sIndex)) {
-                    
-                }
-            }*/
-            return connectedNode.equals(nodesSet);
+        public ArrayList<N> getPath() {
+            return null;
         }
 }
