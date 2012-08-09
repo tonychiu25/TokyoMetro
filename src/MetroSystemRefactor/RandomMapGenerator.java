@@ -5,7 +5,6 @@
 package MetroSystemRefactor;
 import java.util.Random;
 import au.com.bytecode.opencsv.CSVWriter;
-import java.io.FileWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 /**
@@ -49,7 +48,7 @@ public class RandomMapGenerator {
     public static void main(String args[]) {
         RandomMapGenerator randMap = new RandomMapGenerator();
         Random rand = new Random();
-        int mapSize = 200;
+        int mapSize = 20;
         int map[][] = randMap.generateRandomMap(mapSize);
         for (int i=0; i<mapSize; i++) {
             for (int j=0; j<mapSize; j++) {

@@ -51,7 +51,7 @@ public class MSTMetro extends graph<station, railway>{
 
         public void addNode(Integer sIndex) {
             if (!checkNodeExists(sIndex)) {
-                station station = new station(sIndex);
+                station station = new station(sIndex, "no", "no");
                 nodes.put(sIndex, station);
             }
         }

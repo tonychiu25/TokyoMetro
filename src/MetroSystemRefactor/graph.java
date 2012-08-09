@@ -7,9 +7,7 @@ import java.util.Set;
 abstract class graph<N, E> {
 	protected Map<Integer, N> nodes;
 	protected List<E> edges;
-	
-	public abstract void addNode(Integer index);
-	
+        
 	public void addEdge(E edge) {
 		edges.add(edge);
 	}

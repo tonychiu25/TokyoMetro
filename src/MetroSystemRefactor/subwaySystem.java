@@ -6,23 +6,23 @@ import MetroSystemRefactor.railway;
 
 public class subwaySystem extends graph<station, railway>{
 	// nodes in superclass replaced stations.
-        HashMap<String, ArrayList<Integer>> metroLines;
+        HashMap<String, metroLine> lines;
         stationsMediator stationMediator;
         
 	public subwaySystem() {
-		stationMediator = new stationsMediator();
-		nodes = new HashMap();
-		edges = new ArrayList();
-                metroLines = new HashMap();
-	}
+            stationMediator = new stationsMediator();
+            nodes = new HashMap();
+            edges = new ArrayList();
+            lines = new HashMap();
+        }
 	
-	public void addNode(Integer sIndex) {
+	public void addNode(Integer sIndex, String sName, String sLine) {
 		if (!checkNodeExists(sIndex)) {
-			station station = new station(sIndex);
+			station station = new station(sIndex, sName, sLine);
 			nodes.put(sIndex, station);
 		}
 	}
-	
+        
 	public void connectStations(Integer s1Index, Integer s2Index, Integer distance, Integer cost, Integer time) throws Exception {
 		if(!checkNodeExists(s1Index)) {
 			throw new Exception("Station "+s1Index+" does not exist");
@@ -46,4 +46,6 @@ public class subwaySystem extends graph<station, railway>{
         public void printNeighbouringStations() {
             stationMediator.printStationNeighbours();
         }
+        
+        
 }

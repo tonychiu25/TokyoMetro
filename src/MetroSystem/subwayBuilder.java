@@ -58,10 +58,11 @@ public class subwayBuilder {
 				val = val.replace(")", "");
 				if (val.contains(";")) {
 					edgeAttr = val.split(";");
-					if (edgeAttr.length == 3) {
+					if (edgeAttr.length == 4) {
 						Integer distance = Integer.parseInt(edgeAttr[0]);
 						Integer cost = Integer.parseInt(edgeAttr[1]);
 						Integer time = Integer.parseInt(edgeAttr[2]);
+                                                String line = edgeAttr[3];
 						subway.connectStations(sIndex, connectStationIndex, distance, cost, time);
 					} else {
 						throw new Exception("An edge must be define with three values separated by a delimiter ;");

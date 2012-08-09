@@ -2,10 +2,62 @@ package MetroSystemRefactor;
 import au.com.bytecode.opencsv.CSVReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MetroBuilder {
+    
+    // TODO : Refactor using metroLine mediator
+    public MSTMetro buildSubwayFromLineCSV(String filePath) throws Exception {
+        subwaySystem subSystem = new subwaySystem();
+        
+        CSVReader reader = null;
+        try {
+            reader = new CSVReader(new FileReader(filePath));
+        } catch (IOException e) {
+            System.out.println("Invalid File Path");
+            e.printStackTrace();
+        }
+        
+        String [] nextLine, stationAttr;
+        Integer sIndex, sPrevDistance, sPrevTime, sPrevCost, sPrev;
+        String sName, otherMetroLines, currentMetroLine;
+        HashSet<String> addedMetroLine = new HashSet();
+        
+        while ((nextLine = reader.readNext()) != null) {
+            currentMetroLine = nextLine[0];
+            addedMetroLine.add(currentMetroLine);
+            sPrev = null;
+            for (String val : nextLine) {
+                if (val.contains(";")) {  // Skip first line declaration
+                    stationAttr = val.split(val);
+                    sIndex = Integer.parseInt(stationAttr[0]);
+                    sName = stationAttr[1];
+                    sPrevDistance = Integer.parseInt(stationAttr[3]);
+                    sPrevTime = Integer.parseInt(stationAttr[4]);
+                    sPrevCost = Integer.parseInt(stationAttr[5]);
+                    
+                    otherMetroLines = stationAttr[2];
+                    if (otherMetroLines.length() > 0) {
+                        for (String l : otherMetroLines.split("&")) {
+                           if (addedMetroLine.contains(l)) {   // if the other line was already added
+                               
+                               subSystem.connectStations(sIndex, sIndex, sPrevDistance, sPrev, sPrev);
+                           }
+                        }
+                    }
+                    
+                    
+                    sPrev = sIndex;
+                }
+            }
+        }
+        
+        
+        return null;
+    }
     
     // A horribily written function littered with code smells.
     public MSTMetro buildSubwayFromCSV(String filepath) throws Exception {
@@ -24,13 +76,13 @@ public class MetroBuilder {
         
         Integer stationIndex = 1;
         while(reader2.readNext() != null) {
-            subSystem.addNode(stationIndex);
+            subSystem.addNode(stationIndex, "No", "No");
             stationIndex++;
         }
 		
         String [] nextLine;
         String [] edgeAttr;
-		Integer sIndex = 1;
+        Integer sIndex = 1;
         while ((nextLine = reader.readNext()) != null) {
         	Integer connectStationIndex = 1;
             // nextLine[] is an array of values from the line
@@ -68,7 +120,7 @@ public class MetroBuilder {
         for (int i=0; i<mapMatrix[0].length; i++) {
             for (int j=0; j<i; j++) {
                 if (!subSystem.checkNodeExists(j+1)) {
-                    subSystem.addNode(j+1);
+                    subSystem.addNode(j+1, "No", "No");
                 }
                 
                 if (mapMatrix[i][j] > 0) {
