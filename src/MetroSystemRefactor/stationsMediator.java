@@ -25,11 +25,11 @@ public class stationsMediator {
 		}
 	}
         
-        public void removeConnection(Integer sIndex, Integer eIndex) {
-            HashSet<Integer> neighbours = stationsIndexMapping.get(sIndex);
-            neighbours.remove(eIndex);
-            stationsIndexMapping.put(sIndex, neighbours);
-        }
+	public void removeConnection(Integer sIndex, Integer eIndex) {
+		HashSet<Integer> neighbours = stationsIndexMapping.get(sIndex);
+		neighbours.remove(eIndex);
+		stationsIndexMapping.put(sIndex, neighbours);
+	}
 	
 	public HashSet<Integer> getNeighbourStations(Integer targetStationIndex) {
 		HashSet<Integer> neighbouringStations = null;

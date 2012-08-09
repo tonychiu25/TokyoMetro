@@ -38,13 +38,16 @@ public class MetroBuilder {
                     sPrevDistance = Integer.parseInt(stationAttr[3]);
                     sPrevTime = Integer.parseInt(stationAttr[4]);
                     sPrevCost = Integer.parseInt(stationAttr[5]);
-                    
                     otherMetroLines = stationAttr[2];
+                    
+                    if (!subSystem.checkNodeExists(sIndex)) {	// Current station has not been added; therefore must belong to current station
+                    	subSystem.addNode(sIndex, sName, currentMetroLine);
+                    }
+                    
                     if (otherMetroLines.length() > 0) {
                         for (String l : otherMetroLines.split("&")) {
                            if (addedMetroLine.contains(l)) {   // if the other line was already added
-                               
-                               subSystem.connectStations(sIndex, sIndex, sPrevDistance, sPrev, sPrev);
+                        	   
                            }
                         }
                     }
