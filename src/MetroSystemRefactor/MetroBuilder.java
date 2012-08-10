@@ -12,6 +12,7 @@ public class MetroBuilder {
     // TODO : Refactor using metroLine mediator
     public MSTMetro buildSubwayFromLineCSV(String filePath) throws Exception {
         subwaySystem subSystem = new subwaySystem();
+        MSTMetro mstSub = new MSTMetro();
         
         CSVReader reader = null;
         try {
@@ -32,7 +33,7 @@ public class MetroBuilder {
             sPrev = null;
             for (String val : nextLine) {
                 if (val.contains(";")) {  // Skip first line declaration
-                    stationAttr = val.split(val);
+                    stationAttr = val.split(";");
                     sIndex = Integer.parseInt(stationAttr[0]);
                     sName = stationAttr[1];
                     sPrevDistance = Integer.parseInt(stationAttr[3]);
@@ -46,20 +47,24 @@ public class MetroBuilder {
                     
                     if (otherMetroLines.length() > 0) {
                         for (String l : otherMetroLines.split("&")) {
-                           if (addedMetroLine.contains(l)) {   // if the other line was already added
-                        	   
-                           }
+                           subSystem.addLineToStation(l, sIndex);
                         }
                     }
                     
-                    
+                    if (sPrev != null) {
+                      subSystem.connectStations(sIndex, sPrev, sPrevDistance, sPrevCost, sPrevTime);
+                    }
                     sPrev = sIndex;
                 }
             }
         }
         
+        mstSub.setNodeSet(subSystem.getNodeSet());
+        mstSub.setEdgeSet(subSystem.getEdgeSet());
+        mstSub.setLineStationMediator(subSystem.getLineStationMediator());
+        mstSub.kruskalAlgorithm();
         
-        return null;
+        return mstSub;
     }
     
     // A horribily written function littered with code smells.
@@ -142,37 +147,22 @@ public class MetroBuilder {
     }
     
 	public static void main(String args[]) {
-            MetroBuilder subBuilder = new MetroBuilder();
+            /*MetroBuilder subBuilder = new MetroBuilder();
             MSTMetro mstSub = null;
             try {
                 mstSub = subBuilder.buildSubwayFromCSV("C:/Users/chiu.sintung/workspace/TokyoMetro/SubwayMaps/Book1.csv");
                 mstSub.getStationMediator().printStationNeighbours();
             } catch (Exception e) {
                 e.printStackTrace();
-            }
-            
-            /*subwaySystem subway = new subwaySystem();
-            subway.addNode(1);
-            subway.addNode(2);
-            subway.addNode(3);
-            subway.addNode(4);
+            }*/
+            MetroBuilder subBuilder1 = new MetroBuilder();
+            MSTMetro mstSub;
             try {
-                subway.connectStations(1, 2, 1, 1, 1);
-                subway.connectStations(2, 3, 1, 2, 3);
-                subway.connectStations(3, 4, 12, 1, 1);
-                subway.connectStations(4, 1, 1, 1, 1);
-                subway.connectStations(1, 3, 1 ,1, 1);
+                mstSub = subBuilder1.buildSubwayFromLineCSV("C:/Users/chiu.sintung/workspace/TokyoMetro/SubwayMaps/Book2.csv");
+                mstSub.getStationMediator().printStationNeighbours();
+                System.out.println(mstSub.getShortestPath(1, 9));
             } catch (Exception e) {
                 e.printStackTrace();
             }
-                
-            MSTMetro mst = new MSTMetro();
-            mst.setEdgeSet(subway.getEdgeSet());
-            mst.setNodeSet(subway.getNodeSet());
-            //mst.setStationMediator(subway.getStationMediator());
-            mst.kruskalAlgorithm();
-            mst.getStationMediator().printStationNeighbours();
-            LinkedList<Integer> path = mst.getShortestPath(1, 4);
-            System.out.println(path);*/
         }
 }

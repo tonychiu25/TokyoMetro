@@ -12,7 +12,11 @@ public class station {
 	}
         
 	public int getIndex() {
-		return stationIndex;
+            return stationIndex;
 	}
+        
+        public String getName() {
+            return name;
+        }
 	
 }

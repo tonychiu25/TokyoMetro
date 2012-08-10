@@ -36,19 +36,21 @@ class railComparitor implements Comparator {
 public class MSTMetro extends graph<station, railway>{
 
         private List<MetroSystemRefactor.railway> sortedLinks;
-        private stationsMediator stationMediator, mstDistanceMediator, mstTimeMediator, mstCostMediator;
+        private stationsMediator stationMediator;
+        private LineStationMediator lsMediator;
         
 	public MSTMetro() {
-                sortedLinks = new ArrayList<>();
-            	stationMediator = new stationsMediator();
-                mstDistanceMediator = new stationsMediator();
-                mstTimeMediator = new stationsMediator();
-                mstCostMediator = new stationsMediator();
+            sortedLinks = new ArrayList<>();
+            stationMediator = new stationsMediator();
                 
-		nodes = new HashMap<>();
-		edges = new ArrayList<>();
+            super.nodes = new HashMap();
+            super.edges = new ArrayList();
         }
 
+        public void setLineStationMediator(LineStationMediator lsmed) {
+            lsMediator = lsmed;
+        }
+        
         public void addNode(Integer sIndex) {
             if (!checkNodeExists(sIndex)) {
                 station station = new station(sIndex, "no");
@@ -62,6 +64,7 @@ public class MSTMetro extends graph<station, railway>{
         
         public LinkedList<Integer> getShortestPath(Integer s1Index, Integer s2Index) {
             LinkedList<Integer> path = new LinkedList();
+            LinkedList<String> pathString = new LinkedList();
             HashMap<Integer, Integer> parent = new HashMap();
             HashSet<Integer> neighbours;
             Queue<Integer> q = new LinkedList();
@@ -90,9 +93,13 @@ public class MSTMetro extends graph<station, railway>{
             
             while (!path.contains(s1Index)) {
                 path.addFirst(currentIndex);
+                pathString.addFirst(nodes.get(currentIndex).getName());
                 currentIndex = parent.get(currentIndex);
             }
             path.add(s2Index);
+            pathString.add(nodes.get(s2Index).getName());
+            
+            System.out.println(pathString);
             
             return path;
         }
@@ -114,7 +121,6 @@ public class MSTMetro extends graph<station, railway>{
                       parent.put(nIndex, currentIndex);
                     }
                     if (visited.contains(nIndex) && parent.get(currentIndex) != nIndex && currentIndex != lastAddedNodeIndex) {
-                        System.out.println(nIndex);
                         return true;
                     } else if(parent.get(currentIndex) != nIndex){
                         q.add(nIndex);

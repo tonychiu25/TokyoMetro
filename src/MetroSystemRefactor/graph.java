@@ -27,7 +27,7 @@ abstract class graph<N, E> {
         public List<E> getEdgeSet() {
             return edges;
         }
-	
+        
 	public boolean checkNodeExists(Integer nIndex) {
 		return nodes.containsKey(nIndex);
 	}

@@ -20,16 +20,20 @@ public class subwaySystem extends graph<station, railway>{
 		if (!checkNodeExists(sIndex)) {
 			station station = new station(sIndex, sName);
 			nodes.put(sIndex, station);
-			addLineStationMediatorEntry(lineName, sIndex);
+			addLineToStation(lineName, sIndex);
 			return true;
 		} else {
 			return false;
 		}
 	}
 	
-	public void addLineStationMediatorEntry(String lineName, Integer sIndex) {
-		metroLineMediator.addToLineStationMediator(lineName, sIndex);
+	public void addLineToStation(String lineName, Integer sIndex) {
+            metroLineMediator.addToLineStationMediator(lineName, sIndex);
 	}
+        
+        public LineStationMediator getLineStationMediator() {
+            return metroLineMediator;
+        }
         
 	public void connectStations(Integer s1Index, Integer s2Index, Integer distance, Integer cost, Integer time) throws Exception {
 		if(!checkNodeExists(s1Index)) {

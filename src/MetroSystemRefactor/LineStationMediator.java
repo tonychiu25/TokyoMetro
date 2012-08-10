@@ -16,31 +16,35 @@ public class LineStationMediator {
     private void addStationToLine(String lineName, Integer sIndex) {
     	ArrayList<Integer> sIndexes;
     	if (!lineStationMediator.containsKey(lineName)) {
-    		sIndexes = new ArrayList<Integer>();
-    		sIndexes.add(sIndex);
+            sIndexes = new ArrayList();
+            sIndexes.add(sIndex);
     	} else {
-    		sIndexes = lineStationMediator.get(lineName);
-    		if (!sIndexes.contains(sIndex)) {
-    			sIndexes.add(sIndex);
-    		}
-    		lineStationMediator.put(lineName, sIndexes);
+            sIndexes = lineStationMediator.get(lineName);
+            if (!sIndexes.contains(sIndex)) {
+                sIndexes.add(sIndex);
+            }
     	}
+        
+        lineStationMediator.put(lineName, sIndexes);
     }
     
     private void addLineToStation(String lineName, Integer sIndex) {
     	HashSet<String> lines;
     	if (!stationLineMediator.containsKey(sIndex)) {
-    		lines = new HashSet<String>();
+    		lines = new HashSet();
     		lines.add(lineName);
-    		stationLineMediator.put(sIndex, lines);
     	} else {
     		lines = stationLineMediator.get(sIndex);
     		lines.add(lineName);
     	}
+        
+        stationLineMediator.put(sIndex, lines);
     }
     
     public void addToLineStationMediator(String lineName, Integer sIndex) {
     	addStationToLine(lineName, sIndex);
     	addLineToStation(lineName, sIndex);
     }
+    
+    
 }
