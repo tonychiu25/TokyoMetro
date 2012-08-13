@@ -6,36 +6,46 @@ import java.util.HashSet;
 
 public class Route {
     
-    LineStationMediator lsMediator;
-    Integer totalDistance, totalTime, sPrevIndex;     // Start/End station index
-    ArrayList<String> lines;
-    ArrayList<Integer> path;
-    ArrayList<Integer> sectionTime;
-    String currentLine;
+    private Integer totalDistance, totalTime, sPrevIndex;     // Start/End station index
+    private ArrayList<String> lines;
+    private ArrayList<Integer> path;
+    private ArrayList<Integer> sectionTime;
+    private String currentLine;
     
-    public Route(LineStationMediator lsMediate) {
-        lsMediator = lsMediate;
-        path = new ArrayList();
-        lines = new ArrayList();
+    public Route() {
+        path = new ArrayList<Integer>();
+        lines = new ArrayList<String>();
         sPrevIndex = null;
         currentLine = "";
+        totalDistance = 0;
+        totalTime = 0;
     }
     
     public void addStationToPath(Integer sIndex) {
-        HashSet<String> stationLines = lsMediator.getLineFromStationIndex(sIndex);
-        if (sPrevIndex == null) {   // First time add
-           if (stationLines.size() == 1) {
-               String l = (String) stationLines.toArray()[0];
-               lines.add(l);
-           } else {
-               
-           }
-           
-        } else {
-            
-        }
-        
-        path.add(sIndex);
+    	
     }
     
+    public String getCurrentLine() {
+    	return currentLine;
+    }
+    
+    public void setCurrentLine(String currentL) {
+    	currentLine = currentL;
+    }
+    
+    public boolean addLineToRoute(String l) {
+    	if (!lines.contains(l)) {
+    		lines.add(l);
+    		return true;
+    	} else {
+    		return false;
+    	}
+    }
+    
+    public void printRoute() {
+    	for(String l : lines) {
+    		System.out.print(l+",");
+    	}
+    	System.out.println("");
+    }
 }

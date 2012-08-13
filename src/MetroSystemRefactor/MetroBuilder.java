@@ -147,19 +147,12 @@ public class MetroBuilder {
     }
     
 	public static void main(String args[]) {
-            /*MetroBuilder subBuilder = new MetroBuilder();
-            MSTMetro mstSub = null;
-            try {
-                mstSub = subBuilder.buildSubwayFromCSV("C:/Users/chiu.sintung/workspace/TokyoMetro/SubwayMaps/Book1.csv");
-                mstSub.getStationMediator().printStationNeighbours();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }*/
             MetroBuilder subBuilder1 = new MetroBuilder();
             MSTMetro mstSub;
             try {
-                mstSub = subBuilder1.buildSubwayFromLineCSV("C:/Users/chiu.sintung/workspace/TokyoMetro/SubwayMaps/Book2.csv");
+                mstSub = subBuilder1.buildSubwayFromLineCSV("C:/Users/tonychiu/workspace/TokyoMetro/SubwayMaps/Book2.csv");
                 mstSub.getStationMediator().printStationNeighbours();
+                mstSub.getShortestPath(1, 5);
             } catch (Exception e) {
                 e.printStackTrace();
             }

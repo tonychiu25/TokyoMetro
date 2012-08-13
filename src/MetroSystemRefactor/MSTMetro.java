@@ -63,11 +63,12 @@ public class MSTMetro extends graph<station, railway>{
         }
         
         public LinkedList<Integer> getShortestPath(Integer s1Index, Integer s2Index) {
-            LinkedList<Integer> path = new LinkedList();
-            LinkedList<String> pathString = new LinkedList();
-            HashMap<Integer, Integer> parent = new HashMap();
+            LinkedList<Integer> path = new LinkedList<Integer>();
+            LinkedList<String> pathString = new LinkedList<String>();
+            HashMap<Integer, Integer> parent = new HashMap<Integer, Integer>();
+            Route r = new Route();
             HashSet<Integer> neighbours;
-            Queue<Integer> q = new LinkedList();
+            Queue<Integer> q = new LinkedList<Integer>();
             Integer currentIndex = s1Index;
             boolean exitwhile = false;
             
@@ -92,14 +93,31 @@ public class MSTMetro extends graph<station, railway>{
             }
             
             while (!path.contains(s1Index)) {
+            	HashSet<String> lines = lsMediator.getLineFromStationIndex(currentIndex);
+            	if (currentIndex == s2Index) {
+            		if (lines.size() > 1 && r.getCurrentLine() == "") {		// ie; end at a multi-lined station
+            			r.addLineToRoute((String)lines.toArray()[0]);
+            		} else if (lines.size() == 1 && r.getCurrentLine() == "") {
+            			r.addLineToRoute((String)lines.toArray()[0]);
+            		}
+            	} else {						// Not the final station
+            		if (lines.size() > 1) {		// Station with multiple lines
+            			r.setCurrentLine("");
+            		} else {
+            			if (r.getCurrentLine() == "") {	// went from intersection to single line
+            				r.setCurrentLine((String) lines.toArray()[0]);
+            				r.addLineToRoute((String) lines.toArray()[0]);
+            			}
+            		}
+            	}
+            	
                 path.addFirst(currentIndex);
                 pathString.addFirst(nodes.get(currentIndex).getName());
                 currentIndex = parent.get(currentIndex);
             }
             path.add(s2Index);
-            pathString.add(nodes.get(s2Index).getName());
-            
-            System.out.println(pathString);
+            System.out.println(path);
+            r.printRoute();
             
             return path;
         }
