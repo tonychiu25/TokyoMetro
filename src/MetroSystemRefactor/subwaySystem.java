@@ -41,19 +41,19 @@ public class subwaySystem extends graph<station, railway>{
 		} else if(!checkNodeExists(s2Index)) {
 			throw new Exception("Station "+s2Index+" doesn not exist");
 		}
-		
-		stationMediator.addNeighbouringStation(s1Index, s2Index);
-		stationMediator.addNeighbouringStation(s2Index, s1Index);
-		
-        railway r = new railway(distance, cost, time);
+                
+                railway r = new railway(distance, cost, time);
 		r.setEnds(s1Index, s2Index);
 		edges.add(r);
+                
+		stationMediator.addNeighbouringStation(s1Index, s2Index, r);
+		stationMediator.addNeighbouringStation(s2Index, s1Index, r);
 	}
         
         public void disconnectStations(Integer s1Index, Integer s2Index) {
             stationMediator.removeConnection(s1Index, s2Index);
             stationMediator.removeConnection(s2Index, s1Index);
-        } 
+        }
         
         public void printNeighbouringStations() {
             stationMediator.printStationNeighbours();

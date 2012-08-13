@@ -160,7 +160,6 @@ public class MetroBuilder {
             try {
                 mstSub = subBuilder1.buildSubwayFromLineCSV("C:/Users/chiu.sintung/workspace/TokyoMetro/SubwayMaps/Book2.csv");
                 mstSub.getStationMediator().printStationNeighbours();
-                System.out.println(mstSub.getShortestPath(1, 9));
             } catch (Exception e) {
                 e.printStackTrace();
             }

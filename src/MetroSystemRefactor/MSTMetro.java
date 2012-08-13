@@ -159,8 +159,8 @@ public class MSTMetro extends graph<station, railway>{
                 for (railway r: sortedLinks) {
                     Integer s1Index = r.getEnds()[0];
                     Integer s2Index = r.getEnds()[1];
-                    stationMediator.addNeighbouringStation(s1Index, s2Index);
-                    stationMediator.addNeighbouringStation(s2Index, s1Index);
+                    stationMediator.addNeighbouringStation(s1Index, s2Index, r);
+                    stationMediator.addNeighbouringStation(s2Index, s1Index, r);
                     if (checkCycle(s1Index)) {
                         stationMediator.removeConnection(s1Index, s2Index);
                         stationMediator.removeConnection(s2Index, s1Index);
