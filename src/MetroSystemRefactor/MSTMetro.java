@@ -92,6 +92,8 @@ public class MSTMetro extends graph<station, railway>{
                 }
             }
             
+            
+            path.add(s2Index);
             while (!path.contains(s1Index)) {
             	HashSet<String> lines = lsMediator.getLineFromStationIndex(currentIndex);
             	if (currentIndex == s2Index) {
@@ -101,21 +103,22 @@ public class MSTMetro extends graph<station, railway>{
             			r.addLineToRoute((String)lines.toArray()[0]);
             		}
             	} else {						// Not the final station
-            		if (lines.size() > 1) {		// Station with multiple lines
+            		if (lines.size() > 1 && r.getCurrentLine() != "") {                         // Station with multiple lines
             			r.setCurrentLine("");
             		} else {
-            			if (r.getCurrentLine() == "") {	// went from intersection to single line
+            			if (r.getCurrentLine() == "") {         // went from intersection to single line
             				r.setCurrentLine((String) lines.toArray()[0]);
             				r.addLineToRoute((String) lines.toArray()[0]);
             			}
             		}
             	}
-            	
+                
                 path.addFirst(currentIndex);
                 pathString.addFirst(nodes.get(currentIndex).getName());
                 currentIndex = parent.get(currentIndex);
             }
-            path.add(s2Index);
+            
+
             System.out.println(path);
             r.printRoute();
             

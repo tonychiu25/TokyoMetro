@@ -35,6 +35,7 @@ public class MetroBuilder {
                 if (val.contains(";")) {  // Skip first line declaration
                     stationAttr = val.split(";");
                     sIndex = Integer.parseInt(stationAttr[0]);
+                    System.out.println(sIndex);
                     sName = stationAttr[1];
                     sPrevDistance = Integer.parseInt(stationAttr[3]);
                     sPrevTime = Integer.parseInt(stationAttr[4]);
@@ -150,9 +151,8 @@ public class MetroBuilder {
             MetroBuilder subBuilder1 = new MetroBuilder();
             MSTMetro mstSub;
             try {
-                mstSub = subBuilder1.buildSubwayFromLineCSV("C:/Users/tonychiu/workspace/TokyoMetro/SubwayMaps/Book2.csv");
-                mstSub.getStationMediator().printStationNeighbours();
-                mstSub.getShortestPath(1, 5);
+                mstSub = subBuilder1.buildSubwayFromLineCSV("C:/Users/chiu.sintung/workspace/TokyoMetro/SubwayMaps/Book2.csv");
+                mstSub.getShortestPath(21, 25);
             } catch (Exception e) {
                 e.printStackTrace();
             }

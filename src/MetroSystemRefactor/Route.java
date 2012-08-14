@@ -2,19 +2,20 @@ package MetroSystemRefactor;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 
 
 public class Route {
     
     private Integer totalDistance, totalTime, sPrevIndex;     // Start/End station index
-    private ArrayList<String> lines;
+    private LinkedList<String> lines;
     private ArrayList<Integer> path;
     private ArrayList<Integer> sectionTime;
     private String currentLine;
     
     public Route() {
         path = new ArrayList<Integer>();
-        lines = new ArrayList<String>();
+        lines = new LinkedList<String>();
         sPrevIndex = null;
         currentLine = "";
         totalDistance = 0;
@@ -35,7 +36,7 @@ public class Route {
     
     public boolean addLineToRoute(String l) {
     	if (!lines.contains(l)) {
-    		lines.add(l);
+    		lines.addFirst(l);
     		return true;
     	} else {
     		return false;
