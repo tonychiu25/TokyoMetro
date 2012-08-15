@@ -67,6 +67,7 @@ public class MSTMetro extends graph<station, railway>{
             LinkedList<String> pathString = new LinkedList<String>();
             HashMap<Integer, Integer> parent = new HashMap<Integer, Integer>();
             Route r = new Route();
+            Integer[] pathArray;
             HashSet<Integer> neighbours;
             Queue<Integer> q = new LinkedList<Integer>();
             Integer currentIndex = s1Index;
@@ -92,8 +93,19 @@ public class MSTMetro extends graph<station, railway>{
                 }
             }
             
+            path.addFirst(s2Index);
+            while(!path.contains(s1Index)) {
+                path.addFirst(currentIndex);
+                currentIndex = parent.get(currentIndex);
+            }
             
-            path.add(s2Index);
+            Object[] pathA = path.toArray();
+            for (int i=1; i <= pathA.length-1; i++) {
+                Integer sIndex = (Integer) pathA[i];
+                System.out.print(sIndex+",");
+            }
+            
+            /*path.add(s2Index);
             while (!path.contains(s1Index)) {
             	HashSet<String> lines = lsMediator.getLineFromStationIndex(currentIndex);
             	if (currentIndex == s2Index) {
@@ -120,7 +132,7 @@ public class MSTMetro extends graph<station, railway>{
             
 
             System.out.println(path);
-            r.printRoute();
+            r.printRoute();*/
             
             return path;
         }
