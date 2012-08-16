@@ -63,6 +63,7 @@ public class stationsMediator {
 		neighbours.remove(eIndex);
 		stationsIndexMapping.put(sIndex, neighbours);
                 removeRailMediatorEntry(sIndex, eIndex);
+                removeRailMediatorEntry(eIndex, sIndex);
 	}
 	
 	public HashSet<Integer> getNeighbourStations(Integer targetStationIndex) {

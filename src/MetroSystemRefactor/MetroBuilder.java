@@ -3,6 +3,7 @@ import au.com.bytecode.opencsv.CSVReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,7 +36,6 @@ public class MetroBuilder {
                 if (val.contains(";")) {  // Skip first line declaration
                     stationAttr = val.split(";");
                     sIndex = Integer.parseInt(stationAttr[0]);
-                    System.out.println(sIndex);
                     sName = stationAttr[1];
                     sPrevDistance = Integer.parseInt(stationAttr[3]);
                     sPrevTime = Integer.parseInt(stationAttr[4]);
@@ -152,7 +152,7 @@ public class MetroBuilder {
             MSTMetro mstSub;
             try {
                 mstSub = subBuilder1.buildSubwayFromLineCSV("C:/Users/chiu.sintung/workspace/TokyoMetro/SubwayMaps/Book2.csv");
-                mstSub.getShortestPath(21, 25);
+                mstSub.getShortestPath(11, 44);
             } catch (Exception e) {
                 e.printStackTrace();
             }

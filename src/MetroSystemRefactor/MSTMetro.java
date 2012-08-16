@@ -64,14 +64,14 @@ public class MSTMetro extends graph<station, railway>{
         
         public LinkedList<Integer> getShortestPath(Integer s1Index, Integer s2Index) {
             LinkedList<Integer> path = new LinkedList<Integer>();
-            LinkedList<String> pathString = new LinkedList<String>();
             HashMap<Integer, Integer> parent = new HashMap<Integer, Integer>();
             Route r = new Route();
-            Integer[] pathArray;
             HashSet<Integer> neighbours;
             Queue<Integer> q = new LinkedList<Integer>();
             Integer currentIndex = s1Index;
             boolean exitwhile = false;
+            Object[] pathA = path.toArray();
+            railway rail;
             
             q.add(currentIndex);
             while (q.size() > 0) {
@@ -99,12 +99,51 @@ public class MSTMetro extends graph<station, railway>{
                 currentIndex = parent.get(currentIndex);
             }
             
-            Object[] pathA = path.toArray();
-            for (int i=1; i <= pathA.length-1; i++) {
+            Integer sectionTime = 0;
+            for (int i=1; i < pathA.length-1; i++) {
                 Integer sIndex = (Integer) pathA[i];
-                System.out.print(sIndex+",");
+                Integer sIndexPrev = (Integer) pathA[i-1];
+                Integer sIndexNext = (Integer) pathA[i+1];
+                
+                rail = stationMediator.getRail(sIndex, sIndexPrev);
+                sectionTime += rail.getTime();
+                
+                HashSet<String> lines_cur = lsMediator.getLineFromStationIndex(sIndex);
+                HashSet<String> lines_prev = lsMediator.getLineFromStationIndex(sIndexPrev);
+                HashSet<String> lines_next = lsMediator.getLineFromStationIndex(sIndexNext);
+                
+                HashSet<String> intersectAll = (HashSet<String>)lines_cur.clone();
+                //HashSet<String> intersectAll = lines_cur;
+                intersectAll.retainAll(lines_prev);
+                intersectAll.retainAll(lines_next);
+                
+                HashSet<String> intersectPrev = lines_cur;
+                
+                HashSet<String> intersectNext = lines_cur;
+                intersectNext.retainAll(lines_next);
+                
+                String randomIntersectAllLine;
+                if (intersectAll.size() < 1) {    // This implies a line chage at the station sIndex
+                    if (!r.routeContainsLine(intersectPrev)) {
+                        r.addLineToRoute((String)intersectPrev.toArray()[0]);
+                    }
+                } else if (intersectAll.size() == 1) {
+                    randomIntersectAllLine = (String)intersectAll.toArray()[0];
+                    if (!r.routeContainsLine(randomIntersectAllLine)) {     // Only add if route did not previously added this line
+                        r.addLineToRoute(randomIntersectAllLine);           // Otherwise route was added
+                    }
+                } else {                         // Case of multiple lines
+                    randomIntersectAllLine = (String)intersectAll.toArray()[0];
+                    if (i+1 == path.size()) {
+                        r.addLineToRoute(randomIntersectAllLine);
+                    }
+                }
             }
             
+            
+            r.printLines();
+            System.out.println(path);
+            //r.printRoute();
             /*path.add(s2Index);
             while (!path.contains(s1Index)) {
             	HashSet<String> lines = lsMediator.getLineFromStationIndex(currentIndex);
@@ -133,7 +172,6 @@ public class MSTMetro extends graph<station, railway>{
 
             System.out.println(path);
             r.printRoute();*/
-            
             return path;
         }
         
