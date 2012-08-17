@@ -1,37 +1,126 @@
 package MetroSystemRefactor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Set;
 
 
 public class Route {
     
-    private Integer totalDistance, totalTime, sPrevIndex, currentSectionTime;     // Start/End station index
-    private LinkedList<String> lines;
-    private ArrayList<Integer> path, sectionTime;
-    private String currentLine;
+    private Integer totalDistance, totalTime;     // Start/End station index
+    private ArrayList<Integer> sectionStations;
+    private LinkedList path;
+    private HashMap<String, Integer> sectionTime, sectionDistance;
+    private stationsMediator stationMed;
+    private LineStationMediator lineStationMed;
     
-    public Route() {
-        path = new ArrayList();
-        sectionTime = new ArrayList();
-        lines = new LinkedList();
-        sPrevIndex = null;
-        currentLine = "";
+    public Route(stationsMediator sm, LineStationMediator lsm, LinkedList<Integer> p) {
+        path = p;
+        stationMed = sm;
+        lineStationMed = lsm;
+        sectionTime = new HashMap<String, Integer>();
+        sectionDistance = new HashMap<String, Integer>();
+        sectionStations = new ArrayList<Integer>();
         totalDistance = 0;
         totalTime = 0;
     }
     
-    public Integer getTotalTime () {
-        return totalTime;
+    private boolean checkLineAdded(HashSet<String> lineSet) {
+    	boolean added = false;
+    	Set<String> addedLines = sectionTime.keySet();
+    	for (String l : lineSet) {
+    		if (addedLines.contains(l)) {
+    			added = true;
+    			break;
+    		}
+    	}
+    	
+    	return added;
     }
     
-    public void addSectionTime(Integer time) {
-         totalTime += time;
-         sectionTime.add(time);
+    // Check if the current station in the path is a cross-section
+    private boolean checkCrossSection(HashSet<String> linePrev, HashSet<String> lineCurrent, HashSet<String> lineNext) {
+    	HashSet<String> intersectAll = (HashSet<String>) lineCurrent.clone();
+    	intersectAll.retainAll(linePrev);
+    	intersectAll.retainAll(lineNext);
+    	
+    	if (intersectAll.isEmpty()) {
+    		return true;
+    	} else {
+    		return false;
+    	}
     }
     
-    // Check if a path contains a set of line
+    private void addSectionToRoute(String l, Integer sTime, Integer sDistance) {
+    	sectionTime.put(l, sTime);
+    	totalTime += sTime;
+    	
+    	sectionDistance.put(l, sDistance);
+    	totalDistance += sDistance;
+    }
+    
+    // Compress the complete path into a route.
+    public void getRouteFromPath() {
+    	HashSet<String> prevLineSet, nextLineSet, currentLineSet, intersectLineSet;
+    	Integer sIndex, sectionTime, sectionDistance;
+    	String line;
+    	railway rail;
+    	
+    	sectionTime = 0;
+    	sectionDistance = 0;
+    	sectionStations.add((Integer)path.getFirst());
+    	for (int i=1; i<path.size()-1; i++) {
+    		// ONLY add lines at cross section
+    		sIndex = (Integer)path.get(i);
+    		prevLineSet = lineStationMed.getLineFromStationIndex(sIndex-1);
+    		currentLineSet = lineStationMed.getLineFromStationIndex(sIndex);
+    		nextLineSet = lineStationMed.getLineFromStationIndex(sIndex+1);
+    		
+    		System.out.println(i);
+    		rail = stationMed.getRail(sIndex, sIndex-1);
+    		sectionTime += rail.getTime();
+    		sectionDistance += rail.getLength();
+    		if (checkCrossSection(prevLineSet, currentLineSet, nextLineSet)) {
+    			intersectLineSet = (HashSet<String>)currentLineSet.clone();
+    			intersectLineSet.retainAll(prevLineSet);
+    			intersectLineSet.retainAll(sectionStations);
+    			if (intersectLineSet.isEmpty()) {	// Implies prev line not added and at cross-section already
+    				line = (String) prevLineSet.toArray()[0];
+    				addSectionToRoute(line, sectionTime, sectionDistance);
+    				sectionTime = 0;
+    				sectionDistance = 0;
+    			}
+    		} else if (currentLineSet.size() == 1) {
+    			if (!checkLineAdded(currentLineSet)) {
+    				line = (String) currentLineSet.toArray()[0];
+    				addSectionToRoute(line, sectionTime, sectionDistance);
+    			}
+    		}
+    	}
+    }
+    
+    public static void main(String args[]) {
+    	HashSet<String> prev = new HashSet();
+    	HashSet<String> curr = new HashSet();
+    	HashSet<String> next = new HashSet();
+    	
+    	prev.add("D");
+    	prev.add("B");
+    	
+    	curr.add("D");
+    	curr.add("C");
+    	
+    	next.add("A");
+    	next.add("E");
+    	
+    	System.out.println(curr);
+    	
+    	System.out.println("DSA");
+    }
+    
+ /*   // Check if a path contains a set of line
     public boolean routeContainsLine(HashSet<String> lineSet) {
         boolean containsLine = false;
         for(String lineName : lineSet) {
@@ -45,43 +134,23 @@ public class Route {
     }
     
     public boolean routeContainsLine(String line) {
-        return lines.contains(line);
+        return sectionTime.keySet().contains(line);
     }
     
-    public void addStationToPath(Integer sIndex) {
-        if (!path.contains(sIndex)) {
-    	  path.add(sIndex);
-        }
+    public void addStationToRoute(Integer sIndex) {
+    	sectionStations.add(sIndex);
     }
     
-    public String getCurrentLine() {
-    	return currentLine;
+    public void printLineTime() {
+    	System.out.println(sectionTime);
     }
     
-    public void setCurrentLine(String currentL) {
-    	currentLine = currentL;
+    public void addSectionToRoute(String l, Integer sTime, Integer sDistance) {
+    	sectionTime.put(l, sTime);
+    	totalTime += sTime;
+    	
+    	sectionDistance.put(l, sDistance);
+    	totalDistance += sDistance;
     }
-    
-    public boolean addLineToRoute(String l) {
-    	if (!lines.contains(l)) {
-    		lines.add(l);
-    		return true;
-    	} else {
-    		return false;
-    	}
-    }
-    
-    public void printRoute() {
-    	for(Integer sIndex : path) {
-    		System.out.print(sIndex+",");
-    	}
-    	System.out.println("");
-    }
-    
-    public void printLines() {
-    	for(String l : lines) {
-    		System.out.print(l+",");
-    	}
-    	System.out.println("");
-    }
+    */
 }
