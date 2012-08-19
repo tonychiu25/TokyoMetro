@@ -11,6 +11,7 @@ public class Route {
     
     private Integer totalDistance, totalTime;     // Start/End station index
     private ArrayList<Integer> sectionStations;
+    private ArrayList<String> sectionLines;
     private LinkedList path;
     private HashMap<String, Integer> sectionTime, sectionDistance;
     private stationsMediator stationMed;
@@ -23,6 +24,7 @@ public class Route {
         sectionTime = new HashMap<String, Integer>();
         sectionDistance = new HashMap<String, Integer>();
         sectionStations = new ArrayList<Integer>();
+        sectionLines = new ArrayList<String>();
         totalDistance = 0;
         totalTime = 0;
     }
@@ -38,6 +40,16 @@ public class Route {
     	}
     	
     	return added;
+    	
+    	/* added = false;
+    	for (String l : lineSet) {
+    		if (sectionLines.contains(l)) {
+    			added = true;
+    			break;
+    		}
+    	}
+    	
+    	return added;*/
     }
     
     // Check if the current station in the path is a cross-section
@@ -54,51 +66,81 @@ public class Route {
     }
     
     private void addSectionToRoute(String l, Integer sTime, Integer sDistance) {
-    	sectionTime.put(l, sTime);
-    	totalTime += sTime;
-    	
-    	sectionDistance.put(l, sDistance);
-    	totalDistance += sDistance;
+        sectionTime.put(l, sTime);
+        totalTime += sTime;
+       
+        sectionDistance.put(l, sDistance);
+        totalDistance += sDistance;
     }
     
     // Compress the complete path into a route.
     public void getRouteFromPath() {
-    	HashSet<String> prevLineSet, nextLineSet, currentLineSet, intersectLineSet;
-    	Integer sIndex, sectionTime, sectionDistance;
+    	HashSet<String> prevLineSet, nextLineSet, currentLineSet, intersectLineSet, currPrevLineIntersect;
+    	Integer sIndex, sPrevIndex, timePerSection, distancePerSection;
     	String line;
     	railway rail;
     	
-    	sectionTime = 0;
-    	sectionDistance = 0;
+    	timePerSection = 0;
+    	distancePerSection = 0;
     	sectionStations.add((Integer)path.getFirst());
     	for (int i=1; i<path.size()-1; i++) {
     		// ONLY add lines at cross section
     		sIndex = (Integer)path.get(i);
+    		sPrevIndex = (Integer) path.get(i-1);
     		prevLineSet = lineStationMed.getLineFromStationIndex(sIndex-1);
     		currentLineSet = lineStationMed.getLineFromStationIndex(sIndex);
     		nextLineSet = lineStationMed.getLineFromStationIndex(sIndex+1);
     		
-    		System.out.println(i);
-    		rail = stationMed.getRail(sIndex, sIndex-1);
-    		sectionTime += rail.getTime();
-    		sectionDistance += rail.getLength();
+    		rail = stationMed.getRail(sIndex, sPrevIndex);
+    		timePerSection += rail.getTime();
+    		distancePerSection += rail.getLength();
     		if (checkCrossSection(prevLineSet, currentLineSet, nextLineSet)) {
     			intersectLineSet = (HashSet<String>)currentLineSet.clone();
     			intersectLineSet.retainAll(prevLineSet);
-    			intersectLineSet.retainAll(sectionStations);
+    			//intersectLineSet.retainAll(sectionStations);
     			if (intersectLineSet.isEmpty()) {	// Implies prev line not added and at cross-section already
     				line = (String) prevLineSet.toArray()[0];
-    				addSectionToRoute(line, sectionTime, sectionDistance);
-    				sectionTime = 0;
-    				sectionDistance = 0;
+    				addSectionToRoute(line, timePerSection,distancePerSection);
+    				timePerSection = 0;
+    				distancePerSection = 0;
     			}
-    		} else if (currentLineSet.size() == 1) {
+    		} /*else if (currentLineSet.size() == 1) {
     			if (!checkLineAdded(currentLineSet)) {
     				line = (String) currentLineSet.toArray()[0];
-    				addSectionToRoute(line, sectionTime, sectionDistance);
+    				addSectionToRoute(line, timePerSection, sectionDistance);
+    			}
+    		}*/
+    		else {
+    			currPrevLineIntersect = (HashSet<String>)currentLineSet.clone();
+    			currPrevLineIntersect.retainAll(prevLineSet);
+    			if (!checkLineAdded(currPrevLineIntersect)) {
+    				if (currPrevLineIntersect.size() == 1) {
+    					line = (String) currPrevLineIntersect.toArray()[0];
+    					addSectionToRoute(line, timePerSection, distancePerSection);
+    				}
     			}
     		}
     	}
+    	
+    	// Check the last node that was missed by the for loop.
+    	Integer sLastIndex = (Integer)path.getLast();
+    	HashSet<String> lastLineSet = lineStationMed.getLineFromStationIndex(sLastIndex);
+    	
+    	Integer secondToLastIndex = (Integer) path.get(path.size()-2);
+    	HashSet<String> secondToLastLineSetIntersect = lineStationMed.getLineFromStationIndex(secondToLastIndex);
+    	secondToLastLineSetIntersect.retainAll(lastLineSet);
+
+    	/*HashSet<String> setPathIntersectLine = (HashSet<String>) lastLineSet.clone();
+    	setPathIntersectLine.retainAll(path);*/
+    	if (!checkLineAdded(secondToLastLineSetIntersect)) {	// Implies a line still hasn't been added;
+    		line = (String) secondToLastLineSetIntersect.toArray()[0];
+    		rail = stationMed.getRail(secondToLastIndex, sLastIndex);
+    		addSectionToRoute(line, timePerSection, distancePerSection);
+    	}
+    	
+    	System.out.println(this.sectionTime.keySet());
+    	System.out.println(this.sectionTime.values());
+    	System.out.println(path);
     }
     
     public static void main(String args[]) {
@@ -115,9 +157,9 @@ public class Route {
     	next.add("A");
     	next.add("E");
     	
-    	System.out.println(curr);
+    	prev.retainAll(curr);
     	
-    	System.out.println("DSA");
+    	System.out.println(curr);
     }
     
  /*   // Check if a path contains a set of line
