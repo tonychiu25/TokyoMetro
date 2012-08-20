@@ -76,7 +76,7 @@ public class Route {
     // Compress the complete path into a route.
     public void getRouteFromPath() {
     	HashSet<String> prevLineSet, nextLineSet, currentLineSet, intersectLineSet, currPrevLineIntersect;
-    	Integer sIndex, sPrevIndex, timePerSection, distancePerSection;
+    	Integer sIndex, sPrevIndex, sNextIndex, timePerSection, distancePerSection;
     	String line;
     	railway rail;
     	
@@ -87,9 +87,10 @@ public class Route {
     		// ONLY add lines at cross section
     		sIndex = (Integer)path.get(i);
     		sPrevIndex = (Integer) path.get(i-1);
-    		prevLineSet = lineStationMed.getLineFromStationIndex(sIndex-1);
+    		sNextIndex = (Integer) path.get(i+1);
+    		prevLineSet = lineStationMed.getLineFromStationIndex(sPrevIndex);
     		currentLineSet = lineStationMed.getLineFromStationIndex(sIndex);
-    		nextLineSet = lineStationMed.getLineFromStationIndex(sIndex+1);
+    		nextLineSet = lineStationMed.getLineFromStationIndex(sNextIndex);
     		
     		rail = stationMed.getRail(sIndex, sPrevIndex);
     		timePerSection += rail.getTime();
@@ -116,7 +117,9 @@ public class Route {
     			if (!checkLineAdded(currPrevLineIntersect)) {
     				if (currPrevLineIntersect.size() == 1) {
     					line = (String) currPrevLineIntersect.toArray()[0];
+    					System.out.println(line+":"+timePerSection);
     					addSectionToRoute(line, timePerSection, distancePerSection);
+    					timePerSection=0;
     				}
     			}
     		}
@@ -137,10 +140,6 @@ public class Route {
     		rail = stationMed.getRail(secondToLastIndex, sLastIndex);
     		addSectionToRoute(line, timePerSection, distancePerSection);
     	}
-    	
-    	System.out.println(this.sectionTime.keySet());
-    	System.out.println(this.sectionTime.values());
-    	System.out.println(path);
     }
     
     public static void main(String args[]) {
