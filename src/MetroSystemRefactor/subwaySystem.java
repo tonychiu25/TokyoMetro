@@ -28,12 +28,12 @@ public class subwaySystem extends graph<station, railway>{
 	}
 	
 	public void addLineToStation(String lineName, Integer sIndex) {
-            metroLineMediator.addToLineStationMediator(lineName, sIndex);
+		metroLineMediator.addToLineStationMediator(lineName, sIndex);
 	}
         
-        public LineStationMediator getLineStationMediator() {
-            return metroLineMediator;
-        }
+    public LineStationMediator getLineStationMediator() {
+    	return metroLineMediator;
+    }
         
 	public void connectStations(Integer s1Index, Integer s2Index, Integer distance, Integer cost, Integer time) throws Exception {
 		if(!checkNodeExists(s1Index)) {

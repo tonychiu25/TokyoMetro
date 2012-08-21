@@ -20,9 +20,12 @@ public class LineStationMediator {
     
     private void addStationToLine(String lineName, Integer sIndex) {
     	ArrayList<Integer> sIndexes;
+    	Line line;
     	if (!lineStationMediator.containsKey(lineName)) {
             sIndexes = new ArrayList();
             sIndexes.add(sIndex);
+            
+            
     	} else {
             sIndexes = lineStationMediator.get(lineName);
             if (!sIndexes.contains(sIndex)) {
@@ -30,6 +33,7 @@ public class LineStationMediator {
             }
     	}
         
+    	
         lineStationMediator.put(lineName, sIndexes);
     }
     
