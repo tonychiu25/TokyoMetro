@@ -151,7 +151,7 @@ public class MetroBuilder {
             MetroBuilder subBuilder1 = new MetroBuilder();
             MSTMetro mstSub;
             try {
-                mstSub = subBuilder1.buildSubwayFromLineCSV("C:/Users/chiu.sintung/workspace/TokyoMetro/SubwayMaps/Book2.csv");
+                mstSub = subBuilder1.buildSubwayFromLineCSV("C:/Users/tonychiu/workspace/TokyoMetro/SubwayMaps/Book2.csv");
                 mstSub.getShortestPath(1, 23);
             } catch (Exception e) {
                 e.printStackTrace();
