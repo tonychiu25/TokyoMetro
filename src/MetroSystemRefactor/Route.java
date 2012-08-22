@@ -40,8 +40,7 @@ public class Route {
 	}
 
 	// Check if the current station in the path is a cross-section
-	private boolean checkCrossSection(HashSet<String> linePrev,
-		HashSet<String> lineCurrent, HashSet<String> lineNext) {
+	private boolean checkCrossSection(HashSet<String> linePrev, HashSet<String> lineCurrent, HashSet<String> lineNext) {
 		HashSet<String> intersectAll = (HashSet<String>) lineCurrent.clone();
 		intersectAll.retainAll(linePrev);
 		intersectAll.retainAll(lineNext);
@@ -79,18 +78,68 @@ public class Route {
 	// Compress the complete path into a route.
 	public void getRouteFromPath() {
 		
-		Integer currStationIndex, nextStationIndex, prevStationIndex;
-		HashSet<String> refLineSet, currLineSet, intersectLineSet;
+		// implementation 3.  if currentlineset != prev line set .. switched lines
+		Integer currStationIndex, prevStationIndex, timePerSection, distancePerSection, railTime, railDistance;
+		HashSet<String> refLineSet, currLineSet, intersectLineSet, prevLineSet;
 		String line;
+		railway rail;
+		
+		timePerSection = 0;
+		distancePerSection = 0;
 		
 		currStationIndex = path.getFirst();
 		refLineSet = lineStationMed.getLineFromStationIndex(currStationIndex);
-		
+		sectionStations.add(currStationIndex);
 		for (int i=1; i<path.size(); i++) {
 			currStationIndex = path.get(i);
 			currLineSet = lineStationMed.getLineFromStationIndex(currStationIndex);
+			intersectLineSet = getSetIntersection(refLineSet, currLineSet);
+			
+			prevStationIndex = path.get(i-1);
+			rail = stationMed.getRail(currStationIndex, prevStationIndex);
+			
+			if (intersectLineSet.isEmpty()) {		// Implies a line change
+				prevLineSet = lineStationMed.getLineFromStationIndex(prevStationIndex);
+				intersectLineSet = getSetIntersection(refLineSet, prevLineSet);
+				line = (String)intersectLineSet.toArray()[0];
+				if (!checkLineAdded(intersectLineSet)) {
+					sectionLines.add(line);
+				}
+				
+				sectionStations.add(prevStationIndex);
+				sectionTime.put(line, timePerSection);
+				sectionDistance.put(line, distancePerSection);
+				
+				timePerSection = 0;
+				distancePerSection = 0;
+				refLineSet = currLineSet;
+			}
+			
+			railTime = rail.getTime();
+			railDistance = rail.getLength();
+			
+			timePerSection += railTime;
+			distancePerSection += railDistance;
+			totalTime += railTime;
+			totalDistance += railDistance;
 		}
 		
+		currStationIndex = path.getLast();
+		currLineSet = lineStationMed.getLineFromStationIndex(currStationIndex);
+		intersectLineSet = getSetIntersection(currLineSet, refLineSet);
+		line = (String)intersectLineSet.toArray()[0];
+		if (!checkLineAdded(intersectLineSet)) {
+			sectionLines.add(line);
+		}
+		sectionStations.add(currStationIndex);
+		sectionTime.put(line, timePerSection);
+		sectionDistance.put(line, distancePerSection);
+		
+		System.out.println(path);
+		System.out.println(sectionStations);
+		//System.out.println(sectionLines);
+		System.out.println(sectionTime);
+		System.out.println(totalTime);
 		// Second oldest implementation
 		/*Integer refStationIndex, currStationIndex, nextStationIndex, prevStationIndex, secondToLastStationIndex;
 		HashSet<String> refLineSet,  currLineSet, nextLineSet, prevLineSet, intersectLineSet;

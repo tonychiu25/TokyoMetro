@@ -146,10 +146,17 @@ public class MetroBuilder {
 		MetroBuilder subBuilder1 = new MetroBuilder();
 		MSTMetro mstSub;
 		try {
-			mstSub = subBuilder1.buildSubwayFromLineCSV("C:/Users/chiu.sintung/workspace/TokyoMetro/SubwayMaps/Book2.csv");
-			mstSub.getShortestPath(3, 44);
+			mstSub = subBuilder1.buildSubwayFromLineCSV("C:/Users/tonychiu/workspace/TokyoMetro/SubwayMaps/Book2.csv");
+			for (int i=1; i<=76; i++) {
+				for (int j=1; j<=76; j++) {
+					if (i != j) {
+						mstSub.getShortestPath(i, j);
+					}
+				}
+			}
+			mstSub.getShortestPath(1, 50);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}	
 	}
 }
