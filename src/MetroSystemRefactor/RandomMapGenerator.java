@@ -61,6 +61,5 @@ public class RandomMapGenerator {
         Writer write = new StringWriter();
         CSVWriter w = new CSVWriter(write);
         
-        
     }
 }

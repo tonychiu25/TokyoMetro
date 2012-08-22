@@ -8,8 +8,8 @@ public class stationsMediator {
         private HashMap<String, railway> stationRailMediator;
 	
 	public stationsMediator() {
-            stationsIndexMapping = new HashMap();
-            stationRailMediator = new HashMap();
+            stationsIndexMapping = new HashMap<Integer, HashSet<Integer>>();
+            stationRailMediator = new HashMap<String, railway>();
 	}
         
         private void removeRailMediatorEntry(Integer s1Index, Integer s2Index) {
