@@ -101,8 +101,7 @@ public class MetroBuilder {
 						subSystem.connectStations(sIndex, connectStationIndex,
 								distance, cost, time);
 					} else {
-						throw new Exception(
-								"An edge must be define with three values separated by a delimiter ;");
+						throw new Exception("An edge must be define with three values separated by a delimiter ;");
 					}
 				}
 				connectStationIndex++;
@@ -146,7 +145,7 @@ public class MetroBuilder {
 		MetroBuilder subBuilder1 = new MetroBuilder();
 		MSTMetro mstSub;
 		try {
-			mstSub = subBuilder1.buildSubwayFromLineCSV("C:/Users/tonychiu/workspace/TokyoMetro/SubwayMaps/Book2.csv");
+			mstSub = subBuilder1.buildSubwayFromLineCSV("C:/Users/chiu.sintung/workspace/TokyoMetro/SubwayMaps/Book2.csv");
 			for (int i=1; i<=76; i++) {
 				for (int j=1; j<=76; j++) {
 					if (i != j) {

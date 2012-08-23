@@ -57,7 +57,5 @@ public class subwaySystem extends graph<station, railway>{
         
         public void printNeighbouringStations() {
             stationMediator.printStationNeighbours();
-        }
-        
-        
+        }  
 }
