@@ -22,8 +22,24 @@ public class LineList {
 	}
 		
 	public Integer getPrevStationIndex(Integer sIndex) {
+		Integer val = null;
+		for (int i=1; i<lineStationIndex.size(); i++) {
+			if (lineStationIndex.get(i) == sIndex) {
+				val = lineStationIndex.get(i-1);
+			}
+		}
 		
-		return 1;
+		return val;
 	}
 	
+	public Integer getNextStationIndex(Integer sIndex) {
+		Integer val = null;
+		for (int i=0; i<lineStationIndex.size()-1; i++) {
+			if (lineStationIndex.get(i) == sIndex) {
+				val = lineStationIndex.get(i+1);
+			}
+		}
+		
+		return val;
+	}
 }

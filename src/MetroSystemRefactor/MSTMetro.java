@@ -46,9 +46,13 @@ public class MSTMetro extends graph<station, railway> {
 		nodes = new HashMap<Integer, station>();
 		edges = new ArrayList<railway>();
 	}
-
+	
 	public void setLineStationMediator(LineStationMediator lsmed) {
 		lsMediator = lsmed;
+	}
+	
+	public LineStationMediator getLineStationMediator() {
+		return lsMediator;
 	}
 
 	public void addNode(Integer sIndex) {
