@@ -1,6 +1,7 @@
 package MetroSystemRefactor;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import MetroSystemRefactor.railway;
 
@@ -34,7 +35,11 @@ public class subwaySystem extends graph<station, railway>{
     public LineStationMediator getLineStationMediator() {
     	return metroLineMediator;
     }
-        
+    
+    public HashSet<Integer> getNeighbours(Integer sIndex) {
+    	return stationMediator.getNeighbourStations(sIndex);
+    }
+    
 	public void connectStations(Integer s1Index, Integer s2Index, Integer distance, Integer cost, Integer time) throws Exception {
 		if(!checkNodeExists(s1Index)) {
 			throw new Exception("Station "+s1Index+" does not exist");

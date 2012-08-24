@@ -111,12 +111,9 @@ public class TestMetroBuilder {
 	}
 	
 	@Test
-	// Test station mediator was correctly setup; ie all stations have the correct neighbors attached
-	// TODO: write stationMediator added correctly test.
+	// Test all stations are properly connected
 	public void testStationNeighborCorrect() throws IOException {
-		String currline = null;
-		String[] lines = null;
-		HashSet<String> lineSet;
+		HashSet<Integer> neighbours;
 		Integer prevStationIndex = null;
 		boolean skipFirst = true;
 		
@@ -124,23 +121,23 @@ public class TestMetroBuilder {
 			skipFirst = true;
 			for (String val : nextLine) {
 				if(!val.contains(";")) {
-					currline = val;
 					continue;
 				}
 				
 				stationAttr = val.split(";");
 				sIndex = Integer.parseInt(stationAttr[0]);
+				// First first station iteration.
 				if (skipFirst) {
 					prevStationIndex = sIndex;
 					skipFirst = false;
 				} else {
-					//System.out.print(sIndex+"=>");
-					//System.out.println(subMediator.getNeighbourStations(sIndex));
-					//assertTrue(subMediator.getNeighbourStations(sIndex).contains(prevStationIndex));
-					//assertTrue(subMediator.getNeighbourStations(prevStationIndex).contains(sIndex));
+					neighbours = subSystem.getNeighbours(sIndex);
+					assertTrue(neighbours.contains(prevStationIndex));
 					prevStationIndex = sIndex;
 				}
 			}
 		}
 	}
+	
+	
 }
