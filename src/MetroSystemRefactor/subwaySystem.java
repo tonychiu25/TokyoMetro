@@ -42,7 +42,7 @@ public class subwaySystem extends graph<station, railway>{
 			throw new Exception("Station "+s2Index+" doesn not exist");
 		}
                 
-                railway r = new railway(distance, cost, time);
+        railway r = new railway(distance, cost, time);
 		r.setEnds(s1Index, s2Index);
 		edges.add(r);
                 

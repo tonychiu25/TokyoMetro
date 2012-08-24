@@ -25,11 +25,12 @@ import MetroSystemRefactor.LineStationMediator;
 import MetroSystemRefactor.MSTMetro;
 import MetroSystemRefactor.MetroBuilder;
 import MetroSystemRefactor.stationsMediator;
+import MetroSystemRefactor.subwaySystem;
 
 public class TestMetroBuilder {
 
 	private Integer maxStationIndex = 76;
-	
+	private subwaySystem subSystem;
 	private MetroBuilder subwayBuilder;
 	private MSTMetro mstSub;
 	private stationsMediator subMediator;
@@ -45,8 +46,9 @@ public class TestMetroBuilder {
 		lineAggr = new LineAggregator();
 		
 		try {
-			mstSub = subwayBuilder.buildSubwayFromLineCSV("C:/Users/tonychiu/workspace/TokyoMetro/SubwayMaps/Book2.csv");
-			reader = new CSVReader(new FileReader("C:/Users/tonychiu/workspace/TokyoMetro/SubwayMaps/Book2.csv"));
+			subSystem = subwayBuilder.buildSubwayFromLineCSV("C:/Users/chiu.sintung/workspace/TokyoMetro/SubwayMaps/Book2.csv");
+			mstSub = subwayBuilder.buildMSTMetro(subSystem);
+			reader = new CSVReader(new FileReader("C:/Users/chiu.sintung/workspace/TokyoMetro/SubwayMaps/Book2.csv"));
 			subMediator = mstSub.getStationMediator();
 			lsMed = mstSub.getLineStationMediator();
 		} catch (Exception e) {
@@ -112,9 +114,33 @@ public class TestMetroBuilder {
 	// Test station mediator was correctly setup; ie all stations have the correct neighbors attached
 	// TODO: write stationMediator added correctly test.
 	public void testStationNeighborCorrect() throws IOException {
+		String currline = null;
+		String[] lines = null;
+		HashSet<String> lineSet;
+		Integer prevStationIndex = null;
+		boolean skipFirst = true;
 		
+		while ((nextLine = reader.readNext()) != null) {
+			skipFirst = true;
+			for (String val : nextLine) {
+				if(!val.contains(";")) {
+					currline = val;
+					continue;
+				}
+				
+				stationAttr = val.split(";");
+				sIndex = Integer.parseInt(stationAttr[0]);
+				if (skipFirst) {
+					prevStationIndex = sIndex;
+					skipFirst = false;
+				} else {
+					//System.out.print(sIndex+"=>");
+					//System.out.println(subMediator.getNeighbourStations(sIndex));
+					//assertTrue(subMediator.getNeighbourStations(sIndex).contains(prevStationIndex));
+					//assertTrue(subMediator.getNeighbourStations(prevStationIndex).contains(sIndex));
+					prevStationIndex = sIndex;
+				}
+			}
+		}
 	}
-	
-	
-
 }

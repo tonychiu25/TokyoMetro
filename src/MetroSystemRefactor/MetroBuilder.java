@@ -7,7 +7,7 @@ import java.io.IOException;
 public class MetroBuilder {
 
 	// TODO : Refactor using metroLine mediator
-	public MSTMetro buildSubwayFromLineCSV(String filePath) throws Exception {
+	public subwaySystem buildSubwayFromLineCSV(String filePath) throws Exception {
 		subwaySystem subSystem = new subwaySystem();
 		MSTMetro mstSub = new MSTMetro();
 
@@ -54,12 +54,14 @@ public class MetroBuilder {
 			}
 		}
 
-		mstSub.setNodeSet(subSystem.getNodeSet());
+		return subSystem;
+		
+		/*mstSub.setNodeSet(subSystem.getNodeSet());
 		mstSub.setEdgeSet(subSystem.getEdgeSet());
 		mstSub.setLineStationMediator(subSystem.getLineStationMediator());
 		mstSub.kruskalAlgorithm();
 
-		return mstSub;
+		return mstSub;*/
 	}
 
 	// A horribily written function littered with code smells.
@@ -116,6 +118,17 @@ public class MetroBuilder {
 
 		return mstSub;
 	}
+	
+	public MSTMetro buildMSTMetro(subwaySystem subSystem) {
+		MSTMetro mstSub = new MSTMetro();
+		
+		mstSub.setNodeSet(subSystem.getNodeSet());
+		mstSub.setEdgeSet(subSystem.getEdgeSet());
+		mstSub.setLineStationMediator(subSystem.getLineStationMediator());
+		mstSub.kruskalAlgorithm();
+
+		return mstSub;
+	}
 
 	public MSTMetro buildSubwayFromMatrix(int[][] mapMatrix) {
 		subwaySystem subSystem = new subwaySystem();
@@ -144,7 +157,7 @@ public class MetroBuilder {
 	public static void main(String args[]) {
 		MetroBuilder subBuilder1 = new MetroBuilder();
 		MSTMetro mstSub;
-		try {
+		/*try {
 			mstSub = subBuilder1.buildSubwayFromLineCSV("C:/Users/chiu.sintung/workspace/TokyoMetro/SubwayMaps/Book2.csv");
 			for (int i=1; i<=76; i++) {
 				for (int j=1; j<=76; j++) {
@@ -153,9 +166,9 @@ public class MetroBuilder {
 					}
 				}
 			}
-			mstSub.getShortestPath(1, 50);
+			mstSub.getShortestPath(11, 27);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}	
+		}*/
 	}
 }
