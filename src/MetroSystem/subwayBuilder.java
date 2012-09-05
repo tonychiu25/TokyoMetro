@@ -88,7 +88,7 @@ public class subwayBuilder {
     	subwayBuilder subBuilder = new subwayBuilder();
     	subwaySystem sub = null;
     	try {
-			subBuilder.buildSubwayFromCSV("C:/Users/chiu.sintung/workspace/TokyoMetro/SubwayMaps/Book1.csv");
+			subBuilder.buildSubwayFromCSV("SubwayMaps/Book1.csv");
 			subwaySystem MSTDistance = subBuilder.getDistanceMSTMetro();
 			//System.out.println(MSTDistance.getRails().size());
 			ArrayList<railway> path = MSTDistance.findShortestPath(1, 3);
