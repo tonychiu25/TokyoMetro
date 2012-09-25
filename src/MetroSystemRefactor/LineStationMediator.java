@@ -6,23 +6,19 @@ import java.util.HashSet;
 
 public class LineStationMediator {
     private HashMap<String, ArrayList<Integer>> lineStationMediator;
-    private HashMap<String, Line> lineStationMediator2;
     private HashMap<Integer, HashSet<String>> stationLineMediator;
-    private HashSet<Line> lines;
+
     
     public LineStationMediator() {
         lineStationMediator = new HashMap<String, ArrayList<Integer>>();
         stationLineMediator = new HashMap<Integer, HashSet<String>>();
-        lineStationMediator2 = new HashMap<String, Line>();
-        lines = new HashSet<Line>();
     }
 
     
     private void addStationToLine(String lineName, Integer sIndex) {
     	ArrayList<Integer> sIndexes;
-    	Line line;
     	if (!lineStationMediator.containsKey(lineName)) {
-            sIndexes = new ArrayList();
+            sIndexes = new ArrayList<Integer>();
             sIndexes.add(sIndex);
             
             
@@ -40,7 +36,7 @@ public class LineStationMediator {
     private void addLineToStation(String lineName, Integer sIndex) {
     	HashSet<String> lines;
     	if (!stationLineMediator.containsKey(sIndex)) {
-    		lines = new HashSet();
+    		lines = new HashSet<String>();
     		lines.add(lineName);
     	} else {
     		lines = stationLineMediator.get(sIndex);

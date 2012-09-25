@@ -1,22 +1,20 @@
 package MetroSystemRefactor;
 
-import java.util.HashSet;
-
 public class station {
 	int stationIndex;
 	String name;
-        
+
 	public station(int sIndex, String sName) {
-            stationIndex = sIndex;
-            name = sName;
+		stationIndex = sIndex;
+		name = sName;
 	}
-        
+
 	public int getIndex() {
-            return stationIndex;
+		return stationIndex;
 	}
-        
-        public String getName() {
-            return name;
-        }
-	
+
+	public String getName() {
+		return name;
+	}
+
 }
