@@ -66,7 +66,7 @@ public class MSTMetro extends graph<station, railway> {
 		return stationMediator;
 	}
 
-	public LinkedList<Integer> getShortestPath(Integer s1Index, Integer s2Index) {
+	public Route getShortestPath(Integer s1Index, Integer s2Index) {
 		LinkedList<Integer> path = new LinkedList<Integer>();
 		HashMap<Integer, Integer> parent = new HashMap<Integer, Integer>();
 		HashSet<Integer> neighbours;
@@ -102,7 +102,8 @@ public class MSTMetro extends graph<station, railway> {
 
 		Route r = new Route(stationMediator, lsMediator, path);
 		r.getRouteFromPath();
-		return null;
+		
+		return r;
 	}
 
 	public boolean checkCycle(Integer lastAddedNodeIndex) {

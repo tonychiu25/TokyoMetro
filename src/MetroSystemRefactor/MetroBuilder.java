@@ -157,18 +157,21 @@ public class MetroBuilder {
 	public static void main(String args[]) {
 		MetroBuilder subBuilder1 = new MetroBuilder();
 		MSTMetro mstSub;
-		/*try {
-			mstSub = subBuilder1.buildSubwayFromLineCSV("C:/Users/chiu.sintung/workspace/TokyoMetro/SubwayMaps/Book2.csv");
-			for (int i=1; i<=76; i++) {
+		subwaySystem subsys;
+		try {
+			subsys = subBuilder1.buildSubwayFromLineCSV("C:/Users/chiu.sintung/workspace/TokyoMetro/SubwayMaps/Book2.csv");
+			mstSub = subBuilder1.buildMSTMetro(subsys);
+			/*for (int i=1; i<=76; i++) {
 				for (int j=1; j<=76; j++) {
 					if (i != j) {
 						mstSub.getShortestPath(i, j);
 					}
 				}
-			}
-			mstSub.getShortestPath(11, 27);
+			}*/
+			Route r = mstSub.getShortestPath(32, 19);
+			System.out.println(r.getRouteTotalTime());
 		} catch (Exception e) {
 			e.printStackTrace();
-		}*/
+		}
 	}
 }
