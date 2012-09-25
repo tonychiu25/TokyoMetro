@@ -161,13 +161,13 @@ public class MetroBuilder {
 		try {
 			subsys = subBuilder1.buildSubwayFromLineCSV("C:/Users/chiu.sintung/workspace/TokyoMetro/SubwayMaps/Book2.csv");
 			mstSub = subBuilder1.buildMSTMetro(subsys);
-			/*for (int i=1; i<=76; i++) {
+			for (int i=1; i<=76; i++) {
 				for (int j=1; j<=76; j++) {
 					if (i != j) {
 						mstSub.getShortestPath(i, j);
 					}
 				}
-			}*/
+			}
 			Route r = mstSub.getShortestPath(32, 19);
 			System.out.println(r.getRouteTotalTime());
 		} catch (Exception e) {

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 
+// Describes a route from one staiton to another.
 public class Route {
 
 	private Integer totalDistance, totalTime;
