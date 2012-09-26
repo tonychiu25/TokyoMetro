@@ -4,6 +4,7 @@ import au.com.bytecode.opencsv.CSVReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+
 public class MetroBuilder {
 
 	// TODO : Refactor using metroLine mediator
@@ -158,18 +159,22 @@ public class MetroBuilder {
 		MetroBuilder subBuilder1 = new MetroBuilder();
 		MSTMetro mstSub;
 		subwaySystem subsys;
+		Route r;
+		int sIndexMax = 128;
+		
 		try {
-			subsys = subBuilder1.buildSubwayFromLineCSV("C:/Users/chiu.sintung/workspace/TokyoMetro/SubwayMaps/Book2.csv");
+			subsys = subBuilder1.buildSubwayFromLineCSV("C:/Users/chiu.sintung/workspace/TokyoMetro/SubwayMaps/metromap2.csv");
 			mstSub = subBuilder1.buildMSTMetro(subsys);
-			for (int i=1; i<=76; i++) {
-				for (int j=1; j<=76; j++) {
+			mstSub.getStationMediator().printStationNeighbours();
+			/*for (int i=124; i<=sIndexMax; i++) {
+				for (int j=124; j<=sIndexMax; j++) {
 					if (i != j) {
-						mstSub.getShortestPath(i, j);
+						//System.out.println(i+":"+j);
+						System.out.println(mstSub.getNodeSet().keySet());
+						r = mstSub.getShortestPath(1000, 1004);
 					}
 				}
-			}
-			Route r = mstSub.getShortestPath(32, 19);
-			System.out.println(r.getRouteTotalTime());
+			}*/
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

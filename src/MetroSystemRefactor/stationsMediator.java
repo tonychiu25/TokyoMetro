@@ -42,6 +42,10 @@ public class stationsMediator {
 
 		return stationRailMediator.get(key);
 	}
+	
+	public void printStationRailMediator() {
+		System.out.println(stationRailMediator.keySet());
+	}
 
 	public void addNeighbouringStation(Integer targetStation,
 			Integer neighbourStation, railway r) {

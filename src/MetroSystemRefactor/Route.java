@@ -114,6 +114,7 @@ public class Route {
 				refLineSet = currLineSet;
 			}
 			
+			//System.out.println(prevStationIndex+"<=>"+currStationIndex);
 			railTime = rail.getTime();
 			railDistance = rail.getLength();
 			

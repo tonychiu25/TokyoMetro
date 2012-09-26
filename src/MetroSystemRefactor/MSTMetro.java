@@ -137,7 +137,7 @@ public class MSTMetro extends graph<station, railway> {
 
 	public subwaySystem kruskalAlgorithm() {
 		sortedLinks.addAll(edges);
-		Collections.sort(sortedLinks, new railComparitor("d"));
+		Collections.sort(sortedLinks, new railComparitor("t"));
 		for (railway r : sortedLinks) {
 			Integer s1Index = r.getEnds()[0];
 			Integer s2Index = r.getEnds()[1];
