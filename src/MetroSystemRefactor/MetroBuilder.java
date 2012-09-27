@@ -3,7 +3,9 @@ package MetroSystemRefactor;
 import au.com.bytecode.opencsv.CSVReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
 
+import org.apache.commons.collections.keyvalue.MultiKey;
 
 public class MetroBuilder {
 
@@ -36,13 +38,15 @@ public class MetroBuilder {
 					sPrevTime = Integer.parseInt(stationAttr[4]);
 					sPrevCost = Integer.parseInt(stationAttr[5]);
 					otherMetroLines = stationAttr[2];
+					subSystem.addLineToStation(currentMetroLine, sIndex);
 					if (!subSystem.checkNodeExists(sIndex)) {
 						subSystem.addNode(sIndex, sName, currentMetroLine);
 					}
 
 					if (otherMetroLines.length() > 0) {
 						for (String l : otherMetroLines.split("&")) {
-							subSystem.addLineToStation(l, sIndex);
+							// TONY Took OUT
+							//subSystem.addLineToStation(l, sIndex);
 						}
 					}
 
@@ -64,61 +68,6 @@ public class MetroBuilder {
 
 		return mstSub;*/
 	}
-
-	// A horribily written function littered with code smells.
-	public MSTMetro buildSubwayFromCSV(String filepath) throws Exception {
-
-		subwaySystem subSystem = new subwaySystem();
-
-		CSVReader reader = null;
-		CSVReader reader2 = null;
-		try {
-			reader = new CSVReader(new FileReader(filepath));
-			reader2 = new CSVReader(new FileReader(filepath));
-		} catch (IOException e) {
-			System.out.println("Invalid File Path");
-			e.printStackTrace();
-		}
-
-		Integer stationIndex = 1;
-		while (reader2.readNext() != null) {
-			subSystem.addNode(stationIndex, "No", "No");
-			stationIndex++;
-		}
-
-		String[] nextLine;
-		String[] edgeAttr;
-		Integer sIndex = 1;
-		while ((nextLine = reader.readNext()) != null) {
-			Integer connectStationIndex = 1;
-			// nextLine[] is an array of values from the line
-			for (String val : nextLine) {
-				val = val.replace("(", "");
-				val = val.replace(")", "");
-				if (val.contains(";")) {
-					edgeAttr = val.split(";");
-					if (edgeAttr.length == 3) {
-						Integer distance = Integer.parseInt(edgeAttr[0]);
-						Integer cost = Integer.parseInt(edgeAttr[1]);
-						Integer time = Integer.parseInt(edgeAttr[2]);
-						subSystem.connectStations(sIndex, connectStationIndex,
-								distance, cost, time);
-					} else {
-						throw new Exception("An edge must be define with three values separated by a delimiter ;");
-					}
-				}
-				connectStationIndex++;
-			}
-			sIndex++;
-		}
-
-		MSTMetro mstSub = new MSTMetro();
-		mstSub.setEdgeSet(subSystem.getEdgeSet());
-		mstSub.setNodeSet(subSystem.getNodeSet());
-		mstSub.kruskalAlgorithm();
-
-		return mstSub;
-	}
 	
 	public MSTMetro buildMSTMetro(subwaySystem subSystem) {
 		MSTMetro mstSub = new MSTMetro();
@@ -130,30 +79,6 @@ public class MetroBuilder {
 
 		return mstSub;
 	}
-
-	public MSTMetro buildSubwayFromMatrix(int[][] mapMatrix) {
-		subwaySystem subSystem = new subwaySystem();
-		MSTMetro mstMetro = new MSTMetro();
-
-		for (int i = 0; i < mapMatrix[0].length; i++) {
-			for (int j = 0; j < i; j++) {
-				if (!subSystem.checkNodeExists(j + 1)) {
-					subSystem.addNode(j + 1, "No", "No");
-				}
-				if (mapMatrix[i][j] > 0) {
-					try {
-						subSystem.connectStations(i + 1, j + 1, mapMatrix[i][j], 1, 1);
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-				}
-			}
-		}
-
-		mstMetro.setNodeSet(null);
-
-		return null;
-	}
  
 	public static void main(String args[]) {
 		MetroBuilder subBuilder1 = new MetroBuilder();
@@ -162,16 +87,24 @@ public class MetroBuilder {
 		Route r;
 		int sIndexMax = 128;
 		
+		HashMap<MultiKey, Integer> map = new HashMap();
+		MultiKey multiKey = new MultiKey(1333, 32);
+
+		map.put(multiKey,4);
+		map.remove(new MultiKey(1323,32));
+		//System.out.println(map.get(new MultiKey(1333,32)));
+		
+		
 		try {
-			subsys = subBuilder1.buildSubwayFromLineCSV("C:/Users/chiu.sintung/workspace/TokyoMetro/SubwayMaps/metromap2.csv");
+			subsys = subBuilder1.buildSubwayFromLineCSV("C:/Users/chiu.sintung/workspace/TokyoMetro/SubwayMaps/metromap.csv");
 			mstSub = subBuilder1.buildMSTMetro(subsys);
+			//System.out.println(mstSub.getStationMediator().getNeighbourStations(128));
 			mstSub.getStationMediator().printStationNeighbours();
-			/*for (int i=124; i<=sIndexMax; i++) {
-				for (int j=124; j<=sIndexMax; j++) {
+			/*for (int i=1; i<=sIndexMax; i++) {
+				for (int j=1; j<=sIndexMax; j++) {
 					if (i != j) {
-						//System.out.println(i+":"+j);
-						System.out.println(mstSub.getNodeSet().keySet());
-						r = mstSub.getShortestPath(1000, 1004);
+						System.out.println(i+":"+j);
+						r = mstSub.getShortestPath(i, j);
 					}
 				}
 			}*/

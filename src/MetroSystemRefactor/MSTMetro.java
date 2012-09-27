@@ -102,7 +102,7 @@ public class MSTMetro extends graph<station, railway> {
 
 		Route r = new Route(stationMediator, lsMediator, path);
 		r.getRouteFromPath();
-		
+
 		return r;
 	}
 
@@ -138,12 +138,23 @@ public class MSTMetro extends graph<station, railway> {
 	public subwaySystem kruskalAlgorithm() {
 		sortedLinks.addAll(edges);
 		Collections.sort(sortedLinks, new railComparitor("t"));
+		int j;
+
+		for (String lineName : lsMediator.getLines()) {
+			ArrayList<Integer> stationsIndex = lsMediator.getStationOnLine(lineName);
+			for(int i=1; i<stationsIndex.size(); i++) {
+				j = i-1;
+				
+			}
+			
+		}
+		
 		for (railway r : sortedLinks) {
 			Integer s1Index = r.getEnds()[0];
 			Integer s2Index = r.getEnds()[1];
 			stationMediator.addNeighbouringStation(s1Index, s2Index, r);
 			stationMediator.addNeighbouringStation(s2Index, s1Index, r);
-			if (checkCycle(s1Index)) {
+			if (checkCycle(s2Index)) {
 				stationMediator.removeConnection(s1Index, s2Index);
 				stationMediator.removeConnection(s2Index, s1Index);
 			}

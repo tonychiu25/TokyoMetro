@@ -40,6 +40,10 @@ public class Route {
 		return added;
 	}
 
+	public LinkedList<Integer> getPath() {
+		return path;
+	}
+	
 	// Check if the current station in the path is a cross-section
 	private boolean checkCrossSection(HashSet<String> linePrev, HashSet<String> lineCurrent, HashSet<String> lineNext) {
 		HashSet<String> intersectAll = (HashSet<String>) lineCurrent.clone();
@@ -76,6 +80,10 @@ public class Route {
 		return intersectingSet;
 	}
 
+	public ArrayList<String> getSectionLines() {
+		return sectionLines;
+	}
+	
 	// Compress the complete path into a route.
 	public void getRouteFromPath() {
 		Integer currStationIndex, prevStationIndex, timePerSection, distancePerSection, railTime, railDistance;
@@ -114,7 +122,6 @@ public class Route {
 				refLineSet = currLineSet;
 			}
 			
-			//System.out.println(prevStationIndex+"<=>"+currStationIndex);
 			railTime = rail.getTime();
 			railDistance = rail.getLength();
 			

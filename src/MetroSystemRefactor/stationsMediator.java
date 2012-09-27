@@ -3,27 +3,31 @@ package MetroSystemRefactor;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.HashSet;
+import org.apache.commons.collections.keyvalue.MultiKey;
 
 public class stationsMediator {
-	Map<Integer, HashSet<Integer>> stationsIndexMapping;
-	private HashMap<String, railway> stationRailMediator;
-
+	private Map<Integer, HashSet<Integer>> stationsIndexMapping;
+	//private HashMap<String, railway> stationRailMediator;
+	private HashMap<MultiKey, railway> stationRailMed;
+	
 	public stationsMediator() {
 		stationsIndexMapping = new HashMap<Integer, HashSet<Integer>>();
-		stationRailMediator = new HashMap<String, railway>();
+		//stationRailMediator = new HashMap<String, railway>();
+		stationRailMed = new HashMap<MultiKey, railway>();
 	}
 
 	private void removeRailMediatorEntry(Integer s1Index, Integer s2Index) {
-		String s1 = Integer.toString(s1Index);
+		/*String s1 = Integer.toString(s1Index);
 		String s2 = Integer.toString(s2Index);
 		String key = s1 + "-" + s2;
 
-		stationRailMediator.remove(key);
+		stationRailMediator.remove(key);*/
+		stationRailMed.remove(new MultiKey(s1Index, s2Index));
 	}
 
 	private boolean addRailToMediator(Integer s1Index, Integer s2Index,
 			railway r) {
-		String s1 = Integer.toString(s1Index);
+		/*String s1 = Integer.toString(s1Index);
 		String s2 = Integer.toString(s2Index);
 		String key = s1 + "-" + s2;
 
@@ -32,23 +36,26 @@ public class stationsMediator {
 			return true;
 		} else {
 			return false;
+		}*/
+		MultiKey key = new MultiKey(s1Index, s2Index);
+		if (!stationRailMed.containsKey(key)) {
+			stationRailMed.put(key, r);
+			return true;
+		} else {
+			return false;
 		}
 	}
 
 	public railway getRail(Integer s1Index, Integer s2Index) {
-		String s1 = Integer.toString(s1Index);
+		/*String s1 = Integer.toString(s1Index);
 		String s2 = Integer.toString(s2Index);
 		String key = s1 + "-" + s2;
 
-		return stationRailMediator.get(key);
-	}
-	
-	public void printStationRailMediator() {
-		System.out.println(stationRailMediator.keySet());
+		return stationRailMediator.get(key);*/
+		return stationRailMed.get(new MultiKey(s1Index, s2Index));
 	}
 
-	public void addNeighbouringStation(Integer targetStation,
-			Integer neighbourStation, railway r) {
+	public void addNeighbouringStation(Integer targetStation, Integer neighbourStation, railway r) {
 		HashSet<Integer> neighbourIndexSet;
 		if (!stationsIndexMapping.containsKey(targetStation)) {
 			neighbourIndexSet = new HashSet<Integer>();
@@ -57,9 +64,7 @@ public class stationsMediator {
 			addRailToMediator(targetStation, neighbourStation, r);
 		} else {
 			neighbourIndexSet = stationsIndexMapping.get(targetStation);
-			if (neighbourIndexSet.add(neighbourStation)) {
-				// System.out.println("Station "+neighbourStation+" was already added as a neighbour to station "+targetStation);
-			}
+			neighbourIndexSet.add(neighbourStation);
 			stationsIndexMapping.put(targetStation, neighbourIndexSet);
 			addRailToMediator(targetStation, neighbourStation, r);
 		}

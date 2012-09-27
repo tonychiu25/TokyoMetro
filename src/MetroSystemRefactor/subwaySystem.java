@@ -2,6 +2,7 @@ package MetroSystemRefactor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import MetroSystemRefactor.railway;
 
@@ -21,7 +22,7 @@ public class subwaySystem extends graph<station, railway>{
 		if (!checkNodeExists(sIndex)) {
 			station station = new station(sIndex, sName);
 			nodes.put(sIndex, station);
-			addLineToStation(lineName, sIndex);
+			//addLineToStation(lineName, sIndex);
 			return true;
 		} else {
 			return false;

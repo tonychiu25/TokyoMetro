@@ -3,6 +3,7 @@ package MetroSystemRefactor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 
 public class LineStationMediator {
     private HashMap<String, ArrayList<Integer>> lineStationMediator;
@@ -13,15 +14,12 @@ public class LineStationMediator {
         lineStationMediator = new HashMap<String, ArrayList<Integer>>();
         stationLineMediator = new HashMap<Integer, HashSet<String>>();
     }
-
     
     private void addStationToLine(String lineName, Integer sIndex) {
     	ArrayList<Integer> sIndexes;
     	if (!lineStationMediator.containsKey(lineName)) {
             sIndexes = new ArrayList<Integer>();
             sIndexes.add(sIndex);
-            
-            
     	} else {
             sIndexes = lineStationMediator.get(lineName);
             if (!sIndexes.contains(sIndex)) {
@@ -29,7 +27,6 @@ public class LineStationMediator {
             }
     	}
         
-    	
         lineStationMediator.put(lineName, sIndexes);
     }
     
@@ -44,6 +41,14 @@ public class LineStationMediator {
     	}
         
         stationLineMediator.put(sIndex, lines);
+    }
+    
+    public ArrayList<Integer> getStationOnLine(String line) {
+    	return lineStationMediator.get(line);
+    }
+    
+    public Set<String> getLines() {
+    	return lineStationMediator.keySet();
     }
     
     public void addToLineStationMediator(String lineName, Integer sIndex) {
