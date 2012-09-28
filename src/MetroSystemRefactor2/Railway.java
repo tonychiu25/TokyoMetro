@@ -1,24 +1,38 @@
 package MetroSystemRefactor2;
 
-public class Railway {
+import java.util.HashSet;
+
+import org.jgrapht.graph.DefaultWeightedEdge;
+
+public class Railway extends DefaultWeightedEdge{
 	
-	private int length, time, cost;
+	private int cost;
+	private double length, time;
+	private HashSet<Integer> connectedStationIndex;
 	
-	public Railway(int length, int time, int cost) {
+	public Railway(double length, double time, int cost, int station1Index, int station2Index) {
+		super();
+		connectedStationIndex = new HashSet<Integer>();
+		connectedStationIndex.add(station1Index);
+		connectedStationIndex.add(station2Index);
 		this.length = length;
 		this.time = time;
 		this.cost = cost;
 	}
 	
-	public int getLength() {
+	public double getLength() {
 		return length;
+	}
+	
+	public double getTime() {
+		return time;
 	}
 	
 	public int getCost() {
 		return cost;
 	}
 	
-	public int getTime() {
-		return time;
+	public HashSet<Integer> getConnectedStationIndex() {
+		return connectedStationIndex;
 	}
 }

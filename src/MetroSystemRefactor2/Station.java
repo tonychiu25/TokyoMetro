@@ -12,6 +12,10 @@ public class Station {
 		name = sName;
 		lines = new HashSet<String>();
 	}
+	
+	public HashSet<String> getLines() {
+		return lines;
+	}
 
 	public int getIndex() {
 		return stationIndex;

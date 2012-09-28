@@ -86,10 +86,9 @@ abstract class graph<N, E> {
 		graph.setEdgeWeight(e3, 1);
 		graph.setEdgeWeight(e4, 1);
 		
-		
 		DijkstraShortestPath dk = new DijkstraShortestPath(graph, s1, s3);
 		GraphPath<station, railway> path = dk.getPath();
 		
-		System.out.println(path.getWeight());
+		
 	}
 }
