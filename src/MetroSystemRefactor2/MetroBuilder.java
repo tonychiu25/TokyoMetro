@@ -53,8 +53,9 @@ public class MetroBuilder {
 					}
 					
 					mmap.addStationToMap(sIndex, sName, metroLineSet);
+					mmap.addStationToMetroLine(currentMetroLine, sIndex);
 					if (sPrevIndex != null) {
-						mmap.connectStations(sIndex, sPrevIndex, sPrevDistance, sPrevTime, sPrevCost);
+						mmap.connectStations(sIndex, sPrevIndex, sPrevDistance, sPrevTime, sPrevCost, currentMetroLine);
 					}
 					sPrevIndex = sIndex;
 				}

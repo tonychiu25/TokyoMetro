@@ -2,7 +2,9 @@ package UnitTest;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 
 import junit.framework.AssertionFailedError;
 
@@ -27,8 +29,13 @@ public class MetroMapTest {
 		mmap = null;
 	}
 	
+	/**
+	 * Test that stations were correctly added to the MetroMap class.
+	 * @throws IOException
+	 */
 	@Test
 	public void testAddStationToMap() throws IOException {
+		// Test added new stations
 		HashSet<String> station1Lines = new HashSet<String>();
 		station1Lines.add("Line1");
 		station1Lines.add("Line2");
@@ -79,7 +86,7 @@ public class MetroMapTest {
 	
 	// Test that two unconnected stations connected successfully
 	private void testConnectNewStation(Integer station1Index, Integer station2Index, double distance, double time, int cost) {
-		mmap.connectStations(station1Index, station2Index, distance, time, cost);
+		mmap.connectStations(station1Index, station2Index, distance, time, cost, "G");
 		Railway r = mmap.getRail(station1Index, station2Index);
 		assertTrue(r.getConnectedStationIndex().contains(station1Index));
 		assertTrue(r.getConnectedStationIndex().contains(station2Index));
@@ -94,6 +101,7 @@ public class MetroMapTest {
 		Double distance, time;
 		
 		Railway r;
+		Set<Railway> railSet;
 		station1Index = 1;
 		station2Index = 2;
 		station3Index = 3;
@@ -112,24 +120,20 @@ public class MetroMapTest {
 		testConnectNewStation(1, 2, 1.1, 1.2, 3);
 		testConnectNewStation(1, 3, 1.5, 0.2, 2);
 		
-		// Test connecting two stations that have already been connected, edge should not be overriden
+		// Test adding multiple edges between two stations
 		distance  = 3.4;
 		time = 2.3;
 		cost = 4;
 		
-		mmap.connectStations(2, 3, distance, time, cost);
-		mmap.connectStations(2, 3, distance+1, time+1, cost+1);
+		mmap.connectStations(2, 3, distance, time, cost, "Ginza");
+		mmap.connectStations(2, 3, distance+1, time+1, cost+1, "Ginza");
 		
-		r = mmap.getRail(2, 3);
-		assertFalse(r.getLength() == (distance+1));
-		assertFalse(r.getTime() == (time+1));
+		railSet = mmap.getRails(2, 3);
 		
-		assertTrue(r.getLength() == distance);
-		assertTrue(r.getTime() == time);
-		
-		
-		mmap.connectStations(1, 1, 1, 1, 1);
+		// Test that loops are not connected
+		mmap.connectStations(1, 1, 1, 1, 1, "Ginza");
 		r = mmap.getRail(1, 1);
+		assertNull(r);
 	}
 
 }
