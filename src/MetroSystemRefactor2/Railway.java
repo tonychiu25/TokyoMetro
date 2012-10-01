@@ -8,9 +8,10 @@ public class Railway extends DefaultWeightedEdge{
 	
 	private int cost;
 	private double length, time;
+	private String line;
 	private HashSet<Integer> connectedStationIndex;
 	
-	public Railway(double length, double time, int cost, int station1Index, int station2Index) {
+	public Railway(double length, double time, int cost, int station1Index, int station2Index, String line) {
 		super();
 		connectedStationIndex = new HashSet<Integer>();
 		connectedStationIndex.add(station1Index);
@@ -18,6 +19,11 @@ public class Railway extends DefaultWeightedEdge{
 		this.length = length;
 		this.time = time;
 		this.cost = cost;
+		this.line = line;
+	}
+	
+	public String getLine() {
+		return line;
 	}
 	
 	public double getLength() {
