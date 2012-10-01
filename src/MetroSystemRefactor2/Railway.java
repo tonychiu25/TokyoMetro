@@ -8,6 +8,7 @@ public class Railway extends DefaultWeightedEdge{
 	private int id;
 	private int cost;
 	private double length, time;
+	private String line;
 	private HashSet<Integer> connectedStationIndex;
 	private String metroline;
 	
@@ -20,6 +21,10 @@ public class Railway extends DefaultWeightedEdge{
 		this.time = time;
 		this.cost = cost;
 		this.metroline = metroline;
+	}
+	
+	public String getLine() {
+		return line;
 	}
 	
 	

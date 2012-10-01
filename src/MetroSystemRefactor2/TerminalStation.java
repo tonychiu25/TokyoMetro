@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-
 public class TerminalStation extends Station{
 	
 	private Calendar firstTrainTime, lastTrainTime; 	// Time String (HH:mm) of first/last train departure time from station.

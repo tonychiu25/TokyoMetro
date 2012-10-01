@@ -85,6 +85,7 @@ public class MetroMapTest {
 	}
 	
 	// Test that two unconnected stations connected successfully
+
 	private void testConnectNewStation(Integer station1Index, Integer station2Index, double distance, double time, int cost) {
 		mmap.connectStations(station1Index, station2Index, distance, time, cost, "G");
 		Railway r = mmap.getRail(station1Index, station2Index);
@@ -135,5 +136,4 @@ public class MetroMapTest {
 		r = mmap.getRail(1, 1);
 		assertNull(r);
 	}
-
 }
