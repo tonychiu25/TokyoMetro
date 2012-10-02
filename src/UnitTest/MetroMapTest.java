@@ -1,27 +1,19 @@
 package UnitTest;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-
-import junit.framework.AssertionFailedError;
-
 import org.junit.*;
 import MetroSystemRefactor2.*;
 import static org.junit.Assert.*;
-import Utility.*;
 
 public class MetroMapTest {
 
 	private MetroMap mmap;
-	private ArrayList<ArrayList<String>> csvMatrix;
 	
 	@Before
 	public void initialize() {
 		mmap = new MetroMap();
-		csvMatrix = new ArrayList<ArrayList<String>>();
 	}
 	
 	@After

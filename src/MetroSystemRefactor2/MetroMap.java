@@ -22,14 +22,17 @@ public class MetroMap {
 	private HashMap<Integer, Station> stationIndexTable;
 	private HashMap<String, ArrayList<Integer>> metroLine;
 	
-	
 	public MetroMap() {
 		metroLine = new HashMap<String, ArrayList<Integer>>();
 		rf = new RailFactory();
 		graph = new WeightedMultigraph<>(rf);
 		stationIndexTable = new HashMap<Integer, Station>();
 	}
-
+	
+	public WeightedMultigraph<Integer, Railway> getMetroGraph() {
+		return graph;
+	}
+	
 	public void addStationToMetroLine(String linename, Integer stationIndex) {
 		ArrayList<Integer> stationsList;
 		if (!metroLine.containsKey(linename)) {
@@ -127,6 +130,9 @@ public class MetroMap {
 		int stationIndex;
 		if (stationIndexList.size()==0) {
 			return new ArrayList<Integer>();
+		} else if (stationIndexList.size() <= 2) {
+			compressedList.addAll(stationIndexList);
+			return compressedList;
 		}
 		
 		stationIndex = stationIndexList.get(0);
@@ -143,67 +149,16 @@ public class MetroMap {
 			if (lineSetIntersect.size() > 0) {
 				// The longest continual metro line
 				// Recursive call to add all compressed lines to currend list.
-				compressedList.add(stationIndex);
+				if (!compressedList.contains(stationIndex)) {
+					compressedList.add(stationIndex);
+				}
 				subList = stationIndexList.subList(i+1, stationIndexList.size());
 				recursedList = compressStationIndexPath(subList);
 				compressedList.addAll(recursedList);
 				break;
 			}
 		}
-		
-		/*int tailIndex, headStationIndex, currListIndex, currStationIndex, lastIndex; 
-		ArrayList<Integer> compressedList, recurseCompressedList;
-		List<Integer> subList;
-		HashSet<String> headStationLineSet, lineSet;
-		
-		// Base case returns an empty list if the input list is empty
-		if (stationIndexList.size() == 0) {
-			return new ArrayList<Integer>();
-		}
-		
-		tailIndex = stationIndexList.size()-1;
-		headStationIndex = (Integer) stationIndexList.get(0);
-		Station s = stationIndexTable.get(headStationIndex);
-		System.out.println(s.getLines());
-		
-		headStationLineSet = stationIndexTable.get(headStationIndex).getLines();
-		compressedList = new ArrayList<Integer>();
-		
-		compressedList.add(headStationIndex);
-		for (int i = tailIndex; i >= 0; i--) {
-			currStationIndex = (int) stationIndexList.get(i);
-			lineSet = stationIndexTable.get(currStationIndex).getLines();
-			// stationLineSet <= {stationLineSet} INTERSECT {headStationIndex}
-			lineSet.retainAll(headStationLineSet);
-			if (lineSet.size() > 0) {
-				compressedList.add(currStationIndex);
-				subList = stationIndexList.subList(i+1, tailIndex+1);
-				// Recursive call to compress the sublist
-				recurseCompressedList = compressStationIndexPath(subList);
-				compressedList.addAll(recurseCompressedList);
-				//compressedList.add((Integer) subList.get(subList.size()-1));
-				break;
-			}
-		}
-		/*while (currListIndex >= 0) {
-			currStationIndex = (int) stationIndexList.get(currListIndex-1);
-			stationLineSet = stationIndexTable.get(currListIndex).getLines();
-			// stationLineSet <= {stationLineSet} INTERSECT {headStationIndex}
-			stationLineSet.retainAll(headStationLineSet);
-			if (stationLineSet.size() > 0) {
-				// The current station forms a longest contuinual path, on the same
-				// metro line, with the headstation
-				compressedList.add(currStationIndex);
-				System.out.println(currListIndex+" : "+tailIndex);
-				subList = stationIndexList.subList(currListIndex, tailIndex);
-				// Recursive call to compress the sublist
-				recurseCompressedList = compressStationIndexPath(subList);
-				compressedList.addAll(recurseCompressedList);
-				break;
-			}
-			currListIndex--;
-		}*/
-	
+
 		return compressedList;
 	}
 	
@@ -243,17 +198,18 @@ public class MetroMap {
 		l.addAll(append);
 		
 		MetroBuilder mb = new MetroBuilder();
-		mb.setFilePath("C:/Users/tonychiu/workspace/TokyoMetro/SubwayMaps/metromap.csv");
+		mb.setFilePath("C:/Users/chiu.sintung/workspace/TokyoMetro/SubwayMaps/metromap2.csv");
 		MetroMap mmap = mb.buildSubwayFromLineCSV();
-		for (int i=1 ; i<=141; i++) {
-			for (int j=1; j<=141; j++) {
+		/*for (int i=1 ; i<=140; i++) {
+			for (int j=1; j<=140; j++) {
 				if (i != j && mmap.graph.containsVertex(i) && mmap.graph.containsVertex(j)) {
-					//ArrayList<Integer> route = mmap.getQuickestRoute(i, j);
-					//route = mmap.compressStationIndexPath(route);
+					ArrayList<Integer> route = mmap.getQuickestRoute(i, j);
+					route = mmap.compressStationIndexPath(route);
 				}
 			}
-		}
-		ArrayList<Integer> route = mmap.getQuickestRoute(43, 60);
+		}*/
+		
+		ArrayList<Integer> route = mmap.getQuickestRoute(20, 42);
 		System.out.println(route);
 		route = mmap.compressStationIndexPath(route);
 		System.out.println(route);

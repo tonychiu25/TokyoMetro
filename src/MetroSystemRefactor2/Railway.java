@@ -63,11 +63,11 @@ public class Railway extends DefaultWeightedEdge{
 			return false;
 		if (id != other.id)
 			return false;
-		if (metroline == null) {
+		/*if (metroline == null) {
 			if (other.metroline != null)
 				return false;
 		} else if (!metroline.equals(other.metroline))
-			return false;
+			return false;*/
 		return true;
 	}
 
