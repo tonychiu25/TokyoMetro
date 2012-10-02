@@ -3,9 +3,26 @@ package Utility;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
+
 import au.com.bytecode.opencsv.CSVReader;
 
 public class CSVParser {
+	
+	/**
+	 * @param Lineset A
+	 * @param Lineset B
+	 * @return utility function for calculating the intersection of sets
+	 */
+	public static HashSet<String> getSetIntersect(HashSet<String> setA, HashSet<String> setB) {
+		HashSet<String> intersection = new HashSet<>();
+		intersection = (HashSet<String>) setA.clone();
+		intersection.retainAll(setB);
+		
+		return intersection;
+	}
+
+	
 	// Utility function to return parsed csv in a 2d ArrayList
 	public static ArrayList<ArrayList<String>> generate2DArrayList(String csvPath) throws IOException {
 		ArrayList<ArrayList<String>> arrayList2d = new ArrayList<ArrayList<String>>();

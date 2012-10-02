@@ -77,14 +77,10 @@ public class MetroMap {
 	public void connectStations(Integer station1Index, Integer station2Index, double length, double time, int cost, String line) {
 		Railway r;
 		// Trying to add a connection to itself
-		/*if (station1Index == station2Index) {
+		if (station1Index == station2Index) {
 			System.err.println("Error : Cannot add a link between the same station : station "+station1Index);
 			System.exit(-1);
-		// Trying to add another connection between two connection stations
-		} else if (graph.containsEdge(station1Index, station2Index)) {
-			System.err.println("Error : a link already exists between station "+station1Index+" and station "+station2Index);
-			System.exit(-1);
-		}*/
+		}
 		
 		// TONY MODIFIED
 		r = new Railway(length, time, cost, station1Index, station2Index, line);
@@ -166,6 +162,7 @@ public class MetroMap {
 	public ArrayList<Integer> getQuickestRoute(Integer station1Index, Integer station2Index) {
 		Integer s1Index, s2Index;
 		ArrayList<Integer> stationIndexList = new ArrayList<Integer>();
+		ArrayList<Integer> compressedIndexList;
 		ArrayList<Railway> railSet = (ArrayList<Railway>) DijkstraShortestPath.findPathBetween(graph, station1Index, station2Index);
 		stationIndexList.add(station1Index);
 		for (Railway r : railSet) {
@@ -177,11 +174,12 @@ public class MetroMap {
 			if (!stationIndexList.contains(s2Index)) {
 				stationIndexList.add(s2Index);
 			}
-			/*System.out.print(r.getLine()+ ": ");
-			System.out.println(r.getConnectedStationIndex().toArray()[0]+" <=> "+r.getConnectedStationIndex().toArray()[1]);
-			System.out.println(r.getLine());*/
 		}
-
+		
+		compressedIndexList = compressStationIndexPath(stationIndexList);
+		for (int i=1; i < compressedIndexList.size()-1; i++) {
+			
+		}
 		return stationIndexList;
 	}
 	
@@ -198,7 +196,7 @@ public class MetroMap {
 		l.addAll(append);
 		
 		MetroBuilder mb = new MetroBuilder();
-		mb.setFilePath("C:/Users/chiu.sintung/workspace/TokyoMetro/SubwayMaps/metromap2.csv");
+		mb.setFilePath("C:/Users/tonychiu/workspace/TokyoMetro/SubwayMaps/metromap2.csv");
 		MetroMap mmap = mb.buildSubwayFromLineCSV();
 		/*for (int i=1 ; i<=140; i++) {
 			for (int j=1; j<=140; j++) {
@@ -209,7 +207,7 @@ public class MetroMap {
 			}
 		}*/
 		
-		ArrayList<Integer> route = mmap.getQuickestRoute(20, 42);
+		ArrayList<Integer> route = mmap.getQuickestRoute(1, 1);
 		System.out.println(route);
 		route = mmap.compressStationIndexPath(route);
 		System.out.println(route);

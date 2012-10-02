@@ -87,10 +87,7 @@ public class MetroBuilderTest extends TestInit {
 				// Confirm this edge connects prevStation and currentStation
 				// Note : Railway overridden the Objects.equals() to compare Railway based on (startStationIndex, endStationIndex, metroLine)
 				assertTrue(railset.contains(new Railway(0, 0, 0, prevStationIndex, currStationIndex, metroLine)));
-				
 			}
 		}
 	}
-	
-	
 }
