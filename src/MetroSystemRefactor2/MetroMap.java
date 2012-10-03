@@ -15,6 +15,7 @@ import org.jgrapht.graph.SimpleWeightedGraph;
 
 import MetroSystemRefactor.LineStationMediator;
 import MetroSystemRefactor.station;
+import Utility.Utility;
 
 public class MetroMap {
 	private WeightedMultigraph<Integer, Railway> graph;
@@ -27,6 +28,11 @@ public class MetroMap {
 		rf = new RailFactory();
 		graph = new WeightedMultigraph<>(rf);
 		stationIndexTable = new HashMap<Integer, Station>();
+	}
+	
+	//TODO : implement it
+	public Double getTravelTimeForLine(String line ,Integer station1Index, Integer station2Index) {
+		return 1.1;
 	}
 	
 	public WeightedMultigraph<Integer, Railway> getMetroGraph() {
@@ -118,7 +124,7 @@ public class MetroMap {
 	 * 
 	 * @return a compressed path consisting of staiton indecies with all cycles removed
 	 */
-	public ArrayList<Integer> compressStationIndexPath(List<Integer> stationIndexList) {
+	public ArrayList<Integer> compressStationIndexPath(List<Integer> stationIndexList, boolean firstInvocation) {
 		List<Integer> subList, recursedList;
 		HashSet<String> headStationLineSet, stationLineSet, lineSetIntersect;
 		Station station;
@@ -135,7 +141,9 @@ public class MetroMap {
 		station = stationIndexTable.get(stationIndex);
 		headStationLineSet = station.getLines();
 		
-		compressedList.add(stationIndex);
+		if (firstInvocation) {
+			compressedList.add(stationIndex);
+		}
 		for (int i=stationIndexList.size()-1; i>=0; i--) {
 			stationIndex = stationIndexList.get(i);
 			station = stationIndexTable.get(stationIndex);
@@ -148,9 +156,14 @@ public class MetroMap {
 				if (!compressedList.contains(stationIndex)) {
 					compressedList.add(stationIndex);
 				}
-				subList = stationIndexList.subList(i+1, stationIndexList.size());
-				recursedList = compressStationIndexPath(subList);
-				compressedList.addAll(recursedList);
+				subList = stationIndexList.subList(i, stationIndexList.size());
+				recursedList = compressStationIndexPath(subList, false);
+				//compressedList.addAll(recursedList);
+				for (Integer sIndex :recursedList) {
+					if (!compressedList.contains(sIndex)) {
+						compressedList.add(sIndex);
+					}
+				}
 				break;
 			}
 		}
@@ -159,12 +172,17 @@ public class MetroMap {
 	}
 	
 	// TONY ADDED
-	public ArrayList<Integer> getQuickestRoute(Integer station1Index, Integer station2Index) {
+	public ArrayList<Integer> getQuickestRoute(Integer sStartIndex, Integer sEndIndex) {
 		Integer s1Index, s2Index;
-		ArrayList<Integer> stationIndexList = new ArrayList<Integer>();
-		ArrayList<Integer> compressedIndexList;
-		ArrayList<Railway> railSet = (ArrayList<Railway>) DijkstraShortestPath.findPathBetween(graph, station1Index, station2Index);
-		stationIndexList.add(station1Index);
+		Double sectionTime;
+		Station station1, station2;
+		String metroLine;
+		ArrayList<Integer> stationIndexList, compressedIndexList;
+		HashSet<String> metroLineSet;
+		ArrayList<Railway> railSet = (ArrayList<Railway>) DijkstraShortestPath.findPathBetween(graph, sStartIndex, sEndIndex);
+		
+		stationIndexList = new ArrayList<Integer>();
+		stationIndexList.add(sStartIndex);
 		for (Railway r : railSet) {
 			s1Index = (Integer) r.getConnectedStationIndex().toArray()[0];
 			s2Index = (Integer) r.getConnectedStationIndex().toArray()[1];
@@ -176,10 +194,16 @@ public class MetroMap {
 			}
 		}
 		
-		compressedIndexList = compressStationIndexPath(stationIndexList);
-		for (int i=1; i < compressedIndexList.size()-1; i++) {
-			
+		compressedIndexList = compressStationIndexPath(stationIndexList, true);
+		for (int i=1; i < compressedIndexList.size(); i++) {
+			station1 = stationIndexTable.get(compressedIndexList.get(i-1));
+			station2 = stationIndexTable.get(compressedIndexList.get(i));
+			metroLineSet = Utility.getSetIntersect(station1.getLines(), station2.getLines());
+			// Get a random line from the intersection
+			//metroLine = (String) metroLineSet.toArray()[0];
+			//sectionTime = getTravelTimeForLine(metroLine, station1.getIndex(), station2.getIndex());
 		}
+		
 		return stationIndexList;
 	}
 	
@@ -196,20 +220,8 @@ public class MetroMap {
 		l.addAll(append);
 		
 		MetroBuilder mb = new MetroBuilder();
-		mb.setFilePath("C:/Users/tonychiu/workspace/TokyoMetro/SubwayMaps/metromap2.csv");
+		mb.setFilePath("C:/Users/chiu.sintung/workspace/TokyoMetro/SubwayMaps/metromap2.csv");
 		MetroMap mmap = mb.buildSubwayFromLineCSV();
-		/*for (int i=1 ; i<=140; i++) {
-			for (int j=1; j<=140; j++) {
-				if (i != j && mmap.graph.containsVertex(i) && mmap.graph.containsVertex(j)) {
-					ArrayList<Integer> route = mmap.getQuickestRoute(i, j);
-					route = mmap.compressStationIndexPath(route);
-				}
-			}
-		}*/
-		
-		ArrayList<Integer> route = mmap.getQuickestRoute(1, 1);
-		System.out.println(route);
-		route = mmap.compressStationIndexPath(route);
-		System.out.println(route);
+		ArrayList<Integer> route = mmap.getQuickestRoute(140, 131);
 	}
 }

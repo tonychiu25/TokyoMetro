@@ -56,7 +56,7 @@ public class TestPath extends TestInit {
 	 * 		   function in MetroMap.java for comments on path compression.
 	 */
 	public void testPathCompression() {
-		ArrayList<Integer> path, compressedPath;
+		ArrayList<Integer> path, compressedPath, lineStationIndex;
 		Set<Integer> addedStationsIndex = mmap.getMetroGraph().vertexSet();
 		HashSet<String> lineSet, lineSetPrev, addedLineSet, lineSetIntesect;
 		addedLineSet = new HashSet<String>();
@@ -66,26 +66,45 @@ public class TestPath extends TestInit {
 				if (i != j && addedStationsIndex.contains(i) && addedStationsIndex.contains(j)) {
 					addedLineSet.clear();	// clear out items from previous iteration
 					path = mmap.getQuickestRoute(i, j);
-					compressedPath = mmap.compressStationIndexPath(path);
+					compressedPath = mmap.compressStationIndexPath(path, true);
 					// 1. Test the compressed path reatins its start and end stations ordering
 					assertTrue(compressedPath.get(0) == i && compressedPath.get(compressedPath.size()-1) == j);
-					// 2. Test the compressed path doesn't have detours; ie G->G->Z->Z->G is a detour
+					// Test the compressed path doesn't have detours; ie G->G->Z->Z->G is a detour
 					for (int k=1; k<compressedPath.size()-1; k++) {
 						lineSetPrev = mmap.getStationByIndex(compressedPath.get(k-1)).getLines();
 						lineSet = mmap.getStationByIndex(compressedPath.get(k)).getLines();
 						lineSetIntesect = getSetIntersect(lineSetPrev, lineSet);
-						/** Test the current station and the previous 
-						  *  station is linked by a similar line.*/
+						/* 2. Test the current station and the previous station is linked by a similar line.*/
 						assertTrue(!lineSetIntesect.isEmpty());
 						
 						if (addedLineSet.isEmpty()) {
 							addedLineSet.addAll(lineSetIntesect);
 						} else {
-							/** Empty intersection implies the current path doesn't form a detour hitherto".
+							/* 3. Empty intersection implies the current path doesn't form a detour hitherto".
 							 *  This also shows the path is properly compressed; ie only first, tail, and 
 							 *  line junction stations are added; any stations inbetween are omitted for now */
 							assertTrue(getSetIntersect(lineSetIntesect, addedLineSet).isEmpty());
 						}
+						
+						/* 4. Test stations (k-1, k) in compressed path are connected on THE SAME LINE */
+						boolean connected = false;
+						for (String l : lineSetIntesect) {
+							if ((lineStationIndex = mmap.getStationIndexListByLine(l)) == null) {
+								continue;
+							}
+							if (lineStationIndex.contains(compressedPath.get(k-1)) &&
+									lineStationIndex.contains(compressedPath.get(k))) {
+								connected = true;
+								System.out.print(compressedPath+"  ");
+								System.out.print(compressedPath.get(k-1)+":"+compressedPath.get(k));
+								System.out.println("  True");
+								break;
+							}
+						}
+						if (!connected) {
+							System.out.println(compressedPath +" Stations ! Connect " + compressedPath.get(k-1) + ":" + +compressedPath.get(k));
+						}
+						assertTrue(connected);
 					}
 				}
 			}

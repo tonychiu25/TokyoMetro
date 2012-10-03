@@ -7,7 +7,7 @@ import java.util.HashSet;
 
 import au.com.bytecode.opencsv.CSVReader;
 
-public class CSVParser {
+public class Utility {
 	
 	/**
 	 * @param Lineset A

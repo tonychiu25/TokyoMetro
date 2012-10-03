@@ -27,15 +27,4 @@ public class Route {
 		
 		return totalTime;
 	}
-	
-	public static void main(String args[]) {
-		LinkedHashMap<String, Integer> yo = new LinkedHashMap<>();
-		yo.put("One", 1);
-		yo.put("Two", 2);
-		yo.put("Three", 3);
-		
-		for (Integer i : yo.values()) {
-			System.out.println(i);
-		}
-	}
 }

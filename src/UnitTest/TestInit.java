@@ -15,7 +15,7 @@ import MetroSystemRefactor2.Station;
 
 public class TestInit {
 
-	protected String csvPath = "C:/Users/tonychiu/workspace/TokyoMetro/SubwayMaps/metromap2.csv";
+	protected String csvPath = "C:/Users/chiu.sintung/workspace/TokyoMetro/SubwayMaps/metromap2.csv";
 	protected int totalStationCount = 140;
 	
 	protected Integer[] ginzaLineExpect = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19};
