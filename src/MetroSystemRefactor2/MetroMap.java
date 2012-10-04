@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 
+import javax.rmi.CORBA.Util;
+
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.graph.WeightedMultigraph;
 import org.jgrapht.WeightedGraph;
@@ -125,49 +127,82 @@ public class MetroMap {
 	 * @return a compressed path consisting of staiton indecies with all cycles removed
 	 */
 	public ArrayList<Integer> compressStationIndexPath(List<Integer> stationIndexList, boolean firstInvocation) {
-		List<Integer> subList, recursedList;
-		HashSet<String> headStationLineSet, stationLineSet, lineSetIntersect;
-		Station station;
-		ArrayList<Integer> compressedList = new ArrayList<>();
-		int stationIndex;
-		if (stationIndexList.size()==0) {
-			return new ArrayList<Integer>();
-		} else if (stationIndexList.size() <= 2) {
-			compressedList.addAll(stationIndexList);
-			return compressedList;
-		}
+//		List<Integer> subList, recursedList;
+//		HashSet<String> headStationLineSet, stationLineSet, lineSetIntersect;
+//		Station station;
+//		ArrayList<Integer> compressedList = new ArrayList<>();
+//		int stationIndex;
+//		if (stationIndexList.size()==0) {
+//			return new ArrayList<Integer>();
+//		} else if (stationIndexList.size() <= 2) {
+//			compressedList.addAll(stationIndexList);
+//			return compressedList;
+//		}
+//		
+//		stationIndex = stationIndexList.get(0);
+//		station = stationIndexTable.get(stationIndex);
+//		headStationLineSet = station.getLines();
+//		
+//		if (firstInvocation) {
+//			compressedList.add(stationIndex);
+//		}
+//		for (int i=stationIndexList.size()-1; i>=0; i--) {
+//			stationIndex = stationIndexList.get(i);
+//			station = stationIndexTable.get(stationIndex);
+//			stationLineSet = station.getLines();
+//			lineSetIntersect = (HashSet<String>) stationLineSet.clone();
+//			lineSetIntersect.retainAll(headStationLineSet);
+//			if (lineSetIntersect.size() > 0) {
+//				// The longest continual metro line
+//				// Recursive call to add all compressed lines to currend list.
+//				if (!compressedList.contains(stationIndex)) {
+//					compressedList.add(stationIndex);
+//				}
+//				subList = stationIndexList.subList(i, stationIndexList.size());
+//				recursedList = compressStationIndexPath(subList, false);
+//				//compressedList.addAll(recursedList);
+//				for (Integer sIndex :recursedList) {
+//					if (!compressedList.contains(sIndex)) {
+//						compressedList.add(sIndex);
+//					}
+//				}
+//				break;
+//			}
+//		}
+		ArrayList<Integer> compressedList = new ArrayList<Integer>();
+		HashSet<String> stationLineIntersect, currStationLineSet;
+		Station currStation;
+		String line;
 		
-		stationIndex = stationIndexList.get(0);
-		station = stationIndexTable.get(stationIndex);
-		headStationLineSet = station.getLines();
-		
-		if (firstInvocation) {
-			compressedList.add(stationIndex);
-		}
-		for (int i=stationIndexList.size()-1; i>=0; i--) {
-			stationIndex = stationIndexList.get(i);
-			station = stationIndexTable.get(stationIndex);
-			stationLineSet = station.getLines();
-			lineSetIntersect = (HashSet<String>) stationLineSet.clone();
-			lineSetIntersect.retainAll(headStationLineSet);
-			if (lineSetIntersect.size() > 0) {
-				// The longest continual metro line
-				// Recursive call to add all compressed lines to currend list.
-				if (!compressedList.contains(stationIndex)) {
-					compressedList.add(stationIndex);
-				}
-				subList = stationIndexList.subList(i, stationIndexList.size());
-				recursedList = compressStationIndexPath(subList, false);
-				//compressedList.addAll(recursedList);
-				for (Integer sIndex :recursedList) {
-					if (!compressedList.contains(sIndex)) {
-						compressedList.add(sIndex);
-					}
-				}
-				break;
+		currStation = stationIndexTable.get(stationIndexList.get(0));
+		stationLineIntersect = Utility.getSetIntersect(currStation.getLines(), currStation.getLines());
+		compressedList.add(currStation.getIndex());
+		for (int i=1; i<stationIndexList.size(); i++) {
+			currStationLineSet = stationIndexTable.get(stationIndexList.get(i)).getLines();
+			stationLineIntersect = Utility.getSetIntersect(stationLineIntersect, currStationLineSet);
+			if (stationLineIntersect.isEmpty()) {
+				// Changed line
+				compressedList.add(stationIndexList.get(i-1));
+				stationLineIntersect = (HashSet<String>) stationIndexTable.get(stationIndexList.get(i-1)).getLines().clone();
 			}
 		}
-
+		
+		compressedList.add(stationIndexList.get(stationIndexList.size()-1));
+//		compressedList.add(stationIndexList.get(headPosition));
+//		headStation = stationIndexTable.get(stationIndexList.get(headPosition));
+//		while (headPosition != stationIndexList.size()-2) {
+//			System.out.println(headPosition+":"+(stationIndexList.size()-1));
+//			for (int i=stationIndexList.size()-1; i >= headPosition; i--) {
+//				currStation = stationIndexTable.get(i);
+//				stationLineIntersect = Utility.getSetIntersect(headStation.getLines(), currStation.getLines());
+//				if (!stationLineIntersect.isEmpty()) {
+//					compressedList.add(stationIndexList.get(i));
+//					headPosition = i;
+//					break;
+//				}
+//			}
+//		}
+		
 		return compressedList;
 	}
 	
@@ -220,8 +255,27 @@ public class MetroMap {
 		l.addAll(append);
 		
 		MetroBuilder mb = new MetroBuilder();
-		mb.setFilePath("C:/Users/chiu.sintung/workspace/TokyoMetro/SubwayMaps/metromap2.csv");
+		mb.setFilePath("C:/Users/chiu.sintung/workspace/TokyoMetro/SubwayMaps/metromap4.csv");
 		MetroMap mmap = mb.buildSubwayFromLineCSV();
-		ArrayList<Integer> route = mmap.getQuickestRoute(140, 131);
+//		ArrayList<Integer> route = mmap.getQuickestRoute(1, 22);
+//		System.out.println(route);
+//		System.out.println(mmap.compressStationIndexPath(route, true));
+		System.out.println(mmap.getStationByIndex(32).getLines());
+//		for (int i=1; i<=221; i++) {
+//			boolean die = false;
+//			for (int j=1; j<=221; j++) {
+//				if (mmap.getStationByIndex(i) != null && mmap.getStationByIndex(j) != null){
+//					System.out.println(i+":"+j);
+//					ArrayList<Integer> route = mmap.getQuickestRoute(i, j);
+//					if (route == null) {
+//						die = true;
+//						break;
+//					}
+//				}
+//			}
+//			if (die) {
+//				break;
+//			}
+//		}
 	}
 }

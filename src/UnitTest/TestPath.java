@@ -26,6 +26,7 @@ public class TestPath extends TestInit {
 				if (i != j && addedStationsIndex.contains(i) && addedStationsIndex.contains(j)) {
 					// 1. Test for path existence between stations (i, j)
 					path = mmap.getQuickestRoute(i, j);
+					assertNotNull(path);
 					assertTrue(!path.isEmpty());
 					// 2. Test that station i and j are contained in this path
 					assertTrue(path.contains(i) && path.contains(j));
@@ -75,8 +76,8 @@ public class TestPath extends TestInit {
 						lineSet = mmap.getStationByIndex(compressedPath.get(k)).getLines();
 						lineSetIntesect = getSetIntersect(lineSetPrev, lineSet);
 						/* 2. Test the current station and the previous station is linked by a similar line.*/
+						System.out.println(compressedPath.get(k-1)+":"+compressedPath.get(k)+"========"+lineSetPrev+":"+lineSet);
 						assertTrue(!lineSetIntesect.isEmpty());
-						
 						if (addedLineSet.isEmpty()) {
 							addedLineSet.addAll(lineSetIntesect);
 						} else {
@@ -102,7 +103,7 @@ public class TestPath extends TestInit {
 							}
 						}
 						if (!connected) {
-							System.out.println(compressedPath +" Stations ! Connect " + compressedPath.get(k-1) + ":" + +compressedPath.get(k));
+							//System.out.println(compressedPath +" Stations ! Connect " + compressedPath.get(k-1) + ":" + +compressedPath.get(k));
 						}
 						assertTrue(connected);
 					}
