@@ -69,7 +69,7 @@ public class MetroBuilderTest extends TestInit {
 	public void testCorrectStationConnection() {
 		Integer[] expectedLine;
 		int currStationIndex, prevStationIndex;
-		Set<Railway> railset;
+		Set<Connection> railset;
 		Set<String> metroLineSet;
 		
 		for (String metroLine : expectedLinesStationMap.keySet()) {
@@ -79,14 +79,14 @@ public class MetroBuilderTest extends TestInit {
 				currStationIndex = expectedLine[i];
 				prevStationIndex =  expectedLine[i-1];
 				railset = mmap.getRails(prevStationIndex, currStationIndex);	// Two stations can support multiple rails that belong to different metro lines.
-				for (Railway r : railset) {
+				for (Connection r : railset) {
 					metroLineSet.add(r.getBelongsToMetroLine());
 				}
 				// Confirm currStation and prevStation have an edge belonging to the current metroline
 				assertTrue(metroLine.contains(metroLine));
 				// Confirm this edge connects prevStation and currentStation
-				// Note : Railway overridden the Objects.equals() to compare Railway based on (startStationIndex, endStationIndex, metroLine)
-				assertTrue(railset.contains(new Railway(0, 0, 0, prevStationIndex, currStationIndex, metroLine)));
+				// Note : Connection overridden the Objects.equals() to compare Connection based on (startStationIndex, endStationIndex, metroLine)
+				assertTrue(railset.contains(new Connection(0, 0, 0, prevStationIndex, currStationIndex, metroLine)));
 			}
 		}
 	}

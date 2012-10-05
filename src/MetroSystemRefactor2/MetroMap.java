@@ -20,7 +20,7 @@ import MetroSystemRefactor.station;
 import Utility.Utility;
 
 public class MetroMap {
-	private WeightedMultigraph<Integer, Railway> graph;
+	private WeightedMultigraph<Integer, Connection> graph;
 	private RailFactory rf;
 	private HashMap<Integer, Station> stationIndexTable;
 	private HashMap<String, ArrayList<Integer>> metroLine;
@@ -37,7 +37,7 @@ public class MetroMap {
 		return 1.1;
 	}
 	
-	public WeightedMultigraph<Integer, Railway> getMetroGraph() {
+	public WeightedMultigraph<Integer, Connection> getMetroGraph() {
 		return graph;
 	}
 	
@@ -83,7 +83,7 @@ public class MetroMap {
 	}
 	
 	public void connectStations(Integer station1Index, Integer station2Index, double length, double time, int cost, String line) {
-		Railway r;
+		Connection r;
 		// Trying to add a connection to itself
 		if (station1Index == station2Index) {
 			System.err.println("Error : Cannot add a link between the same station : station "+station1Index);
@@ -91,7 +91,7 @@ public class MetroMap {
 		}
 		
 		// TONY MODIFIED
-		r = new Railway(length, time, cost, station1Index, station2Index, line);
+		r = new Connection(length, time, cost, station1Index, station2Index, line);
 		try {
 			graph.addEdge(station1Index, station2Index, r);
 			graph.setEdgeWeight(r, time);
@@ -106,11 +106,11 @@ public class MetroMap {
 		}
 	}
 	
-	public Railway getRail(Integer station1Index, Integer station2Index) {
+	public Connection getRail(Integer station1Index, Integer station2Index) {
 		return graph.getEdge(station1Index, station2Index);
 	}
 	
-	public Set<Railway> getRails(Integer station1Index, Integer station2Index) {
+	public Set<Connection> getRails(Integer station1Index, Integer station2Index) {
 		return graph.getAllEdges(station1Index, station2Index);
 	}
 	
@@ -214,11 +214,11 @@ public class MetroMap {
 		String metroLine;
 		ArrayList<Integer> stationIndexList, compressedIndexList;
 		HashSet<String> metroLineSet;
-		ArrayList<Railway> railSet = (ArrayList<Railway>) DijkstraShortestPath.findPathBetween(graph, sStartIndex, sEndIndex);
+		ArrayList<Connection> railSet = (ArrayList<Connection>) DijkstraShortestPath.findPathBetween(graph, sStartIndex, sEndIndex);
 		
 		stationIndexList = new ArrayList<Integer>();
 		stationIndexList.add(sStartIndex);
-		for (Railway r : railSet) {
+		for (Connection r : railSet) {
 			s1Index = (Integer) r.getConnectedStationIndex().toArray()[0];
 			s2Index = (Integer) r.getConnectedStationIndex().toArray()[1];
 			if (!stationIndexList.contains(s1Index)) {

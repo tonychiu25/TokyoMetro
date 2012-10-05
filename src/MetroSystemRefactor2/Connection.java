@@ -4,15 +4,20 @@ import java.util.HashSet;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
 
-public class Railway extends DefaultWeightedEdge{
+public class Connection extends DefaultWeightedEdge{
+	
+	final static int CONNECTED_BY_RAIL = 0;
+	final static int SATELITE_CONNECTION = 1;
+	
 	private int id;
 	private int cost;
+	private int connectionType;
 	private double length, time;
 	private String line;
 	private HashSet<Integer> connectedStationIndex;
 	private String metroline;
 	
-	public Railway(double length, double time, int cost, int station1Index, int station2Index, String metroline) {
+	public Connection(double length, double time, int cost, int station1Index, int station2Index, String metroline) {
 		super();
 		connectedStationIndex = new HashSet<Integer>();
 		connectedStationIndex.add(station1Index);
@@ -23,11 +28,22 @@ public class Railway extends DefaultWeightedEdge{
 		this.metroline = metroline;
 	}
 	
+	public void connectionType(int connectionTypeNumber) {
+		if (connectionType > 1 || connectionType < 0) {
+			System.err.println("Error : Connection not define in Connection class");
+			System.exit(-1);
+		} else {
+			connectionType = connectionTypeNumber;
+		}
+	}
+	
+	public int getConnectType() {
+		return connectionType;
+	}
+	
 	public String getLine() {
 		return line;
 	}
-	
-	
 	
 	@Override
 	public int hashCode() {
@@ -55,7 +71,7 @@ public class Railway extends DefaultWeightedEdge{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Railway other = (Railway) obj;
+		Connection other = (Connection) obj;
 		if (connectedStationIndex == null) {
 			if (other.connectedStationIndex != null)
 				return false;

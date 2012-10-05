@@ -80,7 +80,7 @@ public class MetroMapTest {
 
 	private void testConnectNewStation(Integer station1Index, Integer station2Index, double distance, double time, int cost) {
 		mmap.connectStations(station1Index, station2Index, distance, time, cost, "G");
-		Railway r = mmap.getRail(station1Index, station2Index);
+		Connection r = mmap.getRail(station1Index, station2Index);
 		assertTrue(r.getConnectedStationIndex().contains(station1Index));
 		assertTrue(r.getConnectedStationIndex().contains(station2Index));
 		assertTrue(r.getLength() == distance);
@@ -93,8 +93,8 @@ public class MetroMapTest {
 		Integer station1Index, station2Index, station3Index, station4Index, cost;
 		Double distance, time;
 		
-		Railway r;
-		Set<Railway> railSet;
+		Connection r;
+		Set<Connection> railSet;
 		station1Index = 1;
 		station2Index = 2;
 		station3Index = 3;
@@ -105,7 +105,7 @@ public class MetroMapTest {
 		mmap.addStationToMap(station3Index, "Station1", new HashSet<String>());
 		mmap.addStationToMap(station4Index, "Station1", new HashSet<String>());
 		
-		// If station not connect a null Railway object is returned
+		// If station not connect a null Connection object is returned
 		r = mmap.getRail(station1Index, station2Index);
 		assertNull(r);
 		
