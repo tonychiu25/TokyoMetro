@@ -1,5 +1,7 @@
 package MetroSystemRefactor2;
 
+import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,6 +16,8 @@ import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.graph.WeightedMultigraph;
 import org.jgrapht.WeightedGraph;
 import org.jgrapht.graph.SimpleWeightedGraph;
+
+import au.com.bytecode.opencsv.CSVReader;
 
 import MetroSystemRefactor.LineStationMediator;
 import MetroSystemRefactor.station;
@@ -242,25 +246,14 @@ public class MetroMap {
 		return stationIndexList;
 	}
 	
-	public static void main(String args[]) throws Exception {
-		
-		ArrayList<Integer> l = new ArrayList<>();
-		for (int i=1; i<=10; i++) {
-			l.add(i);
-		}
-		
-		ArrayList<Integer> append = new ArrayList<>();
-		append.add(11);
-		
-		l.addAll(append);
-		
+	public static void main(String args[]) throws Exception {		
 		MetroBuilder mb = new MetroBuilder();
-		mb.setFilePath("C:/Users/chiu.sintung/workspace/TokyoMetro/SubwayMaps/metromap4.csv");
-		MetroMap mmap = mb.buildSubwayFromLineCSV();
+		mb.setDirectoryPath("./SubwayMaps/TokyoMetroMap/");
+		MetroMap mmap = mb.buildSubwayFromCSV();
 //		ArrayList<Integer> route = mmap.getQuickestRoute(1, 22);
 //		System.out.println(route);
 //		System.out.println(mmap.compressStationIndexPath(route, true));
-		System.out.println(mmap.getStationByIndex(32).getLines());
+//		System.out.println(mmap.getStationByIndex(32).getLines());
 //		for (int i=1; i<=221; i++) {
 //			boolean die = false;
 //			for (int j=1; j<=221; j++) {
