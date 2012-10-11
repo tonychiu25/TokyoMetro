@@ -28,12 +28,14 @@ public class MetroMap {
 	private RailFactory rf;
 	private HashMap<Integer, Station> stationIndexTable;
 	private HashMap<String, ArrayList<Integer>> metroLine;
+	private HashMap<String, Integer> stationNameTable;
 	
 	public MetroMap() {
 		metroLine = new HashMap<String, ArrayList<Integer>>();
 		rf = new RailFactory();
 		graph = new WeightedMultigraph<>(rf);
 		stationIndexTable = new HashMap<Integer, Station>();
+		stationNameTable = new HashMap<String, Integer>();
 	}
 	
 	//TODO : implement it
@@ -70,6 +72,7 @@ public class MetroMap {
 				newTerminalStation.addLine(l);
 			}
 			stationIndexTable.put(stationIndex, newTerminalStation);
+			stationNameTable.put(stationName, stationIndex);
 			graph.addVertex(stationIndex);
 		}
 	}
@@ -81,9 +84,14 @@ public class MetroMap {
 			for (String l : lines) {
 				newStation.addLine(l);
 			}
+			stationNameTable.put(stationName, stationIndex);
 			stationIndexTable.put(stationIndex, newStation);
 			graph.addVertex(stationIndex);
 		}
+	}
+	
+	public Integer getStationIndexByName(String stationName) {
+		return stationNameTable.get(stationName);
 	}
 	
 	public void connectStations(Integer station1Index, Integer station2Index, double length, double time, int cost, String line) {
@@ -125,6 +133,22 @@ public class MetroMap {
 	public Collection<Station> getStationSet() {
 		return stationIndexTable.values();
 	}
+	
+	public boolean checkStationAdded(String stationName) {
+		return stationNameTable.containsKey(stationName);
+	}
+	
+	public void appendStationToLine(Integer stationIndex, double length, double time, int cost, String line) {
+		ArrayList<Integer> lineStationsIndex;
+		Integer sTailIndex, sTail2Index;
+		addStationToMetroLine(line, stationIndex);
+		lineStationsIndex = metroLine.get(line);
+		if (lineStationsIndex.size() > 1) {
+			sTailIndex = lineStationsIndex.get(lineStationsIndex.size()-1);
+			sTail2Index = lineStationsIndex.get(lineStationsIndex.size()-2);
+			connectStations(sTailIndex, sTail2Index, length, time, cost, line);
+		}
+ 	}
 	
 	/**
 	 * 

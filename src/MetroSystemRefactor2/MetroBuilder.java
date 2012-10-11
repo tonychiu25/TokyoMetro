@@ -3,7 +3,10 @@ package MetroSystemRefactor2;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
+
+import Utility.Utility;
 import au.com.bytecode.opencsv.CSVReader;
 
 public class MetroBuilder {
@@ -19,7 +22,8 @@ public class MetroBuilder {
 
 	public MetroMap buildSubwayFromCSV() throws Exception {
 		MetroMap mmap = new MetroMap();
-		int stationIndex = 1;
+		Integer stationIndex = 1;
+		Integer currStationIndex, stationIndexTmp;
 		// Directory path here
 
 		String files;
@@ -31,10 +35,11 @@ public class MetroBuilder {
 			String currentLine[];
 			if (listOfFiles[i].isFile()) {
 				files = listOfFiles[i].getName();
-				String nextLine[], satelliteStation[];
-				String currlineAbbr, currlineName, stationName, lineAbbr; 
+				String nextLine[];
+				String currlineAbbr, currlineName, stationName, lineAbbr, otherLine, satelliteStation; 
 				Double distance, time;
 				Integer cost;
+//				HashMap<String, Integer> addedStations = new HashMap<>();	// Map to keep track of added stations
 				try {
 					reader = new CSVReader(new FileReader(basepath+files));
 					currentLine = reader.readNext();
@@ -45,14 +50,45 @@ public class MetroBuilder {
 						distance = Double.parseDouble(nextLine[1]);
 						time = Double.parseDouble(nextLine[2]);
 						cost = Integer.parseInt(nextLine[3]);
-						if (nextLine.length == 5) {
-							System.out.println(currlineName);
-							System.out.println(stationName + " is Empty");
+						otherLine = nextLine[4];
+						satelliteStation = nextLine[5];
+						/** Add new station **/
+						if (!mmap.checkStationAdded(stationName)) {
+							HashSet<String> lineSet = Utility.extractToHashSet(otherLine, "&");
+							mmap.addStationToMap(stationIndex, stationName, lineSet);
+//							addedStations.put(stationName, stationIndex);
+							currStationIndex = stationIndex;
+							stationIndex++;
+							/** connect to current line's head **/
+							mmap.appendStationToLine(currStationIndex, distance, time, cost, currlineAbbr);
+							/** check for satellite stations **/
+							if (!satelliteStation.isEmpty()) {
+								for (String sSatellite : satelliteStation.split(";")) {
+									String otherSatellite, satelliteLine;
+									otherSatellite = sSatellite.split("!")[0];
+									satelliteLine = sSatellite.split("!")[1];
+									lineSet = Utility.extractToHashSet(satelliteLine, "&");
+									if (!mmap.checkStationAdded(otherSatellite)) {
+										/** Make a new Station **/
+										mmap.addStationToMap(stationIndex, otherSatellite, lineSet);
+//										addedStations.put(otherSatellite, stationIndex);
+										mmap.connectStations(stationIndex, currStationIndex, 0, 0, 0, Connection.SATELITE_CONNECTION_LINE);
+										stationIndex++;
+									} else {
+										stationIndexTmp = mmap.getStationIndexByName(otherSatellite);
+										mmap.connectStations(currStationIndex, stationIndexTmp, 0, 0, 0, Connection.SATELITE_CONNECTION_LINE);
+									}
+								}
+							}
+						} else {
+							/** If station was previously added **/
+							System.out.println(stationName);
+							stationIndexTmp = mmap.getStationIndexByName(stationName);
+							mmap.appendStationToLine(stationIndexTmp, distance, time, cost, currlineAbbr);
 						}
 					}
 					
 				} catch (IOException e) {
-					System.out.println("Invalid File Path");
 					e.printStackTrace();
 				}
 			}

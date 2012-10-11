@@ -8,6 +8,7 @@ public class Connection extends DefaultWeightedEdge{
 	
 	final static int CONNECTED_BY_RAIL = 0;
 	final static int SATELITE_CONNECTION = 1;
+	final static String SATELITE_CONNECTION_LINE = "SATELITE";
 	
 	private int id;
 	private int cost;

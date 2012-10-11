@@ -21,6 +21,14 @@ public class Utility {
 		
 		return intersection;
 	}
+	
+	public static HashSet<String> extractToHashSet(String stringValue, String delimit) {
+		HashSet<String> hash = new HashSet<>();
+		for (String s : stringValue.split(delimit)) {
+			hash.add(s);
+		}
+		return hash;
+	}
 
 	
 	// Utility function to return parsed csv in a 2d ArrayList
