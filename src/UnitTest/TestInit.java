@@ -42,9 +42,9 @@ public class TestInit {
 	public void initialize() {
 		builder = new MetroBuilder();
 		stationIndexSet = new HashSet<Integer>();
-		builder.setFilePath(csvPath);
+		builder.setDirectoryPath("./SubwayMaps/TokyoMetroMap/");
 		try {
-			mmap = builder.buildSubwayFromLineCSV();
+			mmap = builder.buildSubwayFromCSV();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

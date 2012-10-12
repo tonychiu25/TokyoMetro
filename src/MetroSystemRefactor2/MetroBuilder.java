@@ -82,7 +82,6 @@ public class MetroBuilder {
 							}
 						} else {
 							/** If station was previously added **/
-							System.out.println(stationName);
 							stationIndexTmp = mmap.getStationIndexByName(stationName);
 							mmap.appendStationToLine(stationIndexTmp, distance, time, cost, currlineAbbr);
 						}
