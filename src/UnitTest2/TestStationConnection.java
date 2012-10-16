@@ -36,10 +36,17 @@ public class TestStationConnection extends TestInit{
 				assertNotNull(mmap.getRail(parentStationIndex, satelliteStationIndex));
 			}
 		}
-		
-		
-		mmap.compressStationIndexPath(mmap.getQuickestRoute(3, 100), true);
 	}
 	
-	
+	/** Test that all stations are connected by some path **/
+	@Test
+	public void testAllStationsConnected() {
+		for (Integer s1Index : mmap.getMetroGraph().vertexSet()) {
+			for (Integer s2Index : mmap.getMetroGraph().vertexSet()) {
+				if (s1Index != s2Index) {
+					assertNotNull(mmap.getQuickestRoute(s1Index, s2Index));
+				}
+			}
+		}
+	}
 }

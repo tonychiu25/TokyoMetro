@@ -197,39 +197,51 @@ public class MetroMap {
 //				break;
 //			}
 //		}
-		ArrayList<Integer> compressedList = new ArrayList<Integer>();
-		HashSet<String> stationLineIntersect, currStationLineSet;
-		Station currStation;
-		String line;
+
 		
-		currStation = stationIndexTable.get(stationIndexList.get(0));
-		stationLineIntersect = Utility.getSetIntersect(currStation.getLines(), currStation.getLines());
-		compressedList.add(currStation.getIndex());
-		for (int i=1; i<stationIndexList.size(); i++) {
-			currStationLineSet = stationIndexTable.get(stationIndexList.get(i)).getLines();
-			stationLineIntersect = Utility.getSetIntersect(stationLineIntersect, currStationLineSet);
-			if (stationLineIntersect.isEmpty()) {
-				// Changed line
-				compressedList.add(stationIndexList.get(i-1));
-				stationLineIntersect = (HashSet<String>) stationIndexTable.get(stationIndexList.get(i-1)).getLines().clone();
+//		ArrayList<Integer> compressedList = new ArrayList<Integer>();
+//		HashSet<String> stationLineIntersect, currStationLineSet;
+//		Station currStation;
+//		String line;
+//		
+//		currStation = stationIndexTable.get(stationIndexList.get(0));
+//		stationLineIntersect = Utility.getSetIntersect(currStation.getLines(), currStation.getLines());
+//		compressedList.add(currStation.getIndex());
+//		for (int i=1; i<stationIndexList.size(); i++) {
+//			currStationLineSet = stationIndexTable.get(stationIndexList.get(i)).getLines();
+//			stationLineIntersect = Utility.getSetIntersect(stationLineIntersect, currStationLineSet);
+//			if (stationLineIntersect.isEmpty()) {
+//				// Changed line
+//				compressedList.add(stationIndexList.get(i-1));
+//				stationLineIntersect = (HashSet<String>) stationIndexTable.get(stationIndexList.get(i-1)).getLines().clone();
+//			}
+//		}
+//		
+//		compressedList.add(stationIndexList.get(stationIndexList.size()-1));
+		ArrayList<Integer> compressedList = new ArrayList<Integer>();
+		Integer headpos, tailpos, headStationIndex, tailStationIndex;
+		Station headStation, tailStation;
+		HashSet<String> intersection;
+		headpos = 0;
+		tailpos = stationIndexList.size()-1;
+		
+		headStationIndex = stationIndexList.get(headpos);
+		compressedList.add(headStationIndex);
+		while (headpos != tailpos) {
+			tailStationIndex = stationIndexList.get(tailpos);
+			headStation = stationIndexTable.get(headStationIndex);
+			tailStation = stationIndexTable.get(tailStationIndex);
+			
+			intersection = Utility.getSetIntersect(headStation.getLines(), tailStation.getLines());
+			if (!intersection.isEmpty()) {
+				compressedList.add(tailStationIndex);
+				headpos = tailpos;
+				tailpos = stationIndexList.size()-1;
+			} else {
+				tailpos--;
 			}
 		}
 		
-		compressedList.add(stationIndexList.get(stationIndexList.size()-1));
-//		compressedList.add(stationIndexList.get(headPosition));
-//		headStation = stationIndexTable.get(stationIndexList.get(headPosition));
-//		while (headPosition != stationIndexList.size()-2) {
-//			System.out.println(headPosition+":"+(stationIndexList.size()-1));
-//			for (int i=stationIndexList.size()-1; i >= headPosition; i--) {
-//				currStation = stationIndexTable.get(i);
-//				stationLineIntersect = Utility.getSetIntersect(headStation.getLines(), currStation.getLines());
-//				if (!stationLineIntersect.isEmpty()) {
-//					compressedList.add(stationIndexList.get(i));
-//					headPosition = i;
-//					break;
-//				}
-//			}
-//		}
 		
 		return compressedList;
 	}
