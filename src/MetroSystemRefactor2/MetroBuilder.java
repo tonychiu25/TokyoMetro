@@ -22,8 +22,9 @@ public class MetroBuilder {
 
 	public MetroMap buildSubwayFromCSV() throws Exception {
 		MetroMap mmap = new MetroMap();
+		HashMap<String, HashSet<String>> satelliteset = new HashMap<>();
 		Integer stationIndex = 1;
-		Integer currStationIndex, stationIndexTmp;
+		Integer currStationIndex, stationIndexTmp, parentIndex, satelliteIndex;
 		// Directory path here
 
 		String files;
@@ -52,34 +53,26 @@ public class MetroBuilder {
 						cost = Integer.parseInt(nextLine[3]);
 						otherLine = nextLine[4];
 						satelliteStation = nextLine[5];
+						
+						if (!satelliteStation.isEmpty()) {
+							String satelliteName;
+							HashSet<String> satStations = new HashSet<>();
+							for (String sSatellite : satelliteStation.split(";")) {
+								satelliteName = sSatellite.split("!")[0];
+								satStations.add(satelliteName);
+							}
+							satelliteset.put(stationName, satStations);
+						}
+						
 						/** Add new station **/
 						if (!mmap.checkStationAdded(stationName)) {
 							HashSet<String> lineSet = Utility.extractToHashSet(otherLine, "&");
+							lineSet.add(currlineAbbr);
 							mmap.addStationToMap(stationIndex, stationName, lineSet);
-//							addedStations.put(stationName, stationIndex);
 							currStationIndex = stationIndex;
 							stationIndex++;
 							/** connect to current line's head **/
 							mmap.appendStationToLine(currStationIndex, distance, time, cost, currlineAbbr);
-							/** check for satellite stations **/
-							if (!satelliteStation.isEmpty()) {
-								for (String sSatellite : satelliteStation.split(";")) {
-									String otherSatellite, satelliteLine;
-									otherSatellite = sSatellite.split("!")[0];
-									satelliteLine = sSatellite.split("!")[1];
-									lineSet = Utility.extractToHashSet(satelliteLine, "&");
-									if (!mmap.checkStationAdded(otherSatellite)) {
-										/** Make a new Station **/
-										mmap.addStationToMap(stationIndex, otherSatellite, lineSet);
-//										addedStations.put(otherSatellite, stationIndex);
-										mmap.connectStations(stationIndex, currStationIndex, 0, 0, 0, Connection.SATELITE_CONNECTION_LINE);
-										stationIndex++;
-									} else {
-										stationIndexTmp = mmap.getStationIndexByName(otherSatellite);
-										mmap.connectStations(currStationIndex, stationIndexTmp, 0, 0, 0, Connection.SATELITE_CONNECTION_LINE);
-									}
-								}
-							}
 						} else {
 							/** If station was previously added **/
 							stationIndexTmp = mmap.getStationIndexByName(stationName);
@@ -93,6 +86,17 @@ public class MetroBuilder {
 			}
 			
 			reader.close();
+		}
+		
+		/** Finally connect the interchange/satellite stations **/
+		for (String parentStation : satelliteset.keySet()) {
+			for (String satelliteName : satelliteset.get(parentStation)) {
+				parentIndex = mmap.getStationIndexByName(parentStation);
+				satelliteIndex = mmap.getStationIndexByName(satelliteName);
+				if (mmap.getRail(parentIndex, satelliteIndex) == null) {
+					mmap.connectStations(parentIndex, satelliteIndex, 0, 0, 0, Connection.SATELITE_CONNECTION_LINE);
+				}
+			}
 		}
 
 		return mmap;

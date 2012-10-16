@@ -25,7 +25,9 @@ public class Utility {
 	public static HashSet<String> extractToHashSet(String stringValue, String delimit) {
 		HashSet<String> hash = new HashSet<>();
 		for (String s : stringValue.split(delimit)) {
-			hash.add(s);
+			if (!s.isEmpty()) {
+				hash.add(s);
+			}
 		}
 		return hash;
 	}

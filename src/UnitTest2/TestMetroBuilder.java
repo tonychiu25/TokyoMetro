@@ -38,7 +38,18 @@ public class TestMetroBuilder extends TestInit{
 	@Test
 	/** Test stations were assigned to the correct line **/
 	public void testStationCorrectLine() {
-		for (String )
+		ArrayList<Integer> stationIndexListActual;
+		ArrayList<String> stationsLineExpect;
+		Station s;
+		for (String line : lines.keySet()) {
+			stationIndexListActual = mmap.getStationIndexListByLine(line);
+			stationsLineExpect = lines.get(line);
+			for (int i=0; i < stationIndexListActual.size(); i++) {
+				s = mmap.getStationByIndex(stationIndexListActual.get(i));
+				assertEquals(s.getName(), stationsLineExpect.get(i));
+				assertTrue(s.getLines().contains(line));
+				assertEquals(s.getLines(), expectStationLines.get(s.getName()));
+			}
+		}
 	}
-
 }

@@ -1,6 +1,6 @@
 E,Oedo,,,,,
 Tochomae,0,0,0,,,void
-Shinjuku-Nishiguchi,0.8,0.685714286,0,YM,,void
+Shinjuku-Nishiguchi,0.8,0.685714286,0,,Shinjuku!YM&S&M,void
 Higashi-Shinjuku,1.4,1.2,0,F,,void
 Wakamatsu-Kawada,1,0.857142857,0,,,void
 Ushigome-Yanagicho,0.6,0.514285714,0,,,void
@@ -8,7 +8,7 @@ Ushigome-Kagurazaka,1,0.857142857,0,,,void
 Iidabashi,1,0.857142857,0,T&Y&N,,void
 Kasuga,1,0.857142857,0,I,Korakuen!M&N,void
 Hongo-Sanchome,0.8,0.685714286,0,M,,void
-Ueno-Okachimachi,1.1,0.942857143,0,YM,Ueno-Hirokoji!G;Naka-Okachimachi!H,void
+Ueno-Okachimachi,1.1,0.942857143,0,,Ueno-Hirokoji!G;Naka-Okachimachi!H;Okachimachi!YM,void
 Shin-Okachimachi,0.8,0.685714286,0,,,void
 Kuramae,1,0.857142857,0,A,,void
 Ryogoku,1.2,1.028571429,0,,,void
@@ -26,7 +26,7 @@ Roppongi,1.1,0.942857143,0,H,,void
 Aoyama-Itchome,1.3,1.114285714,0,G&Z,,void
 Kokuritsu-Kyogijo,1.2,1.028571429,0,,,void
 Yoyogi,1.5,1.285714286,0,YM,,void
-Shinjuku,0.6,0.514285714,0,YM&S,,void
+Shinjuku,0.6,0.514285714,0,YM&S&M,,void
 Tochomae,0.8,0.685714286,0,,,void
 Nishi-Shinjuku-Gochome,0.8,0.685714286,0,,,void
 Nakano-Sakaue,1.2,1.028571429,0,M,,void
