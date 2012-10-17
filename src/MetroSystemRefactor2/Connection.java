@@ -14,7 +14,6 @@ public class Connection extends DefaultWeightedEdge{
 	private int cost;
 	private int connectionType;
 	private double length, time;
-	private String line;
 	private HashSet<Integer> connectedStationIndex;
 	private String metroline;
 	
@@ -43,7 +42,7 @@ public class Connection extends DefaultWeightedEdge{
 	}
 	
 	public String getLine() {
-		return line;
+		return metroline;
 	}
 	
 	@Override
@@ -80,15 +79,8 @@ public class Connection extends DefaultWeightedEdge{
 			return false;
 		if (id != other.id)
 			return false;
-		/*if (metroline == null) {
-			if (other.metroline != null)
-				return false;
-		} else if (!metroline.equals(other.metroline))
-			return false;*/
 		return true;
 	}
-
-
 
 	public double getLength() {
 		return length;

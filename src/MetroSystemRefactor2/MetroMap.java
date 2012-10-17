@@ -28,10 +28,13 @@ public class MetroMap {
 	private RailFactory rf;
 	private HashMap<Integer, Station> stationIndexTable;
 	private HashMap<String, ArrayList<Integer>> metroLine;
+	private HashMap<String, MetroLine> mLines;
 	private HashMap<String, Integer> stationNameTable;
 	
 	public MetroMap() {
 		metroLine = new HashMap<String, ArrayList<Integer>>();
+		mLines = new HashMap<>();
+		
 		rf = new RailFactory();
 		graph = new WeightedMultigraph<>(rf);
 		stationIndexTable = new HashMap<Integer, Station>();
@@ -49,19 +52,30 @@ public class MetroMap {
 	
 	public void addStationToMetroLine(String linename, Integer stationIndex) {
 		ArrayList<Integer> stationsList;
-		if (!metroLine.containsKey(linename)) {
-			stationsList = new ArrayList<Integer>();
-			stationsList.add(stationIndex);
-			metroLine.put(linename, stationsList);
+		MetroLine line;
+//		if (!metroLine.containsKey(linename)) {
+//			stationsList = new ArrayList<Integer>();
+//			stationsList.add(stationIndex);
+//			metroLine.put(linename, stationsList);
+//		} else {
+//			stationsList = metroLine.get(linename);
+//			stationsList.add(stationIndex);
+//			metroLine.put(linename, stationsList);
+//		}
+		if (!mLines.containsKey(linename)) {
+			line = new MetroLine(linename, this);
+			line.addStationIndexToLine(stationIndex);
+			mLines.put(linename, line);
 		} else {
-			stationsList = metroLine.get(linename);
-			stationsList.add(stationIndex);
-			metroLine.put(linename, stationsList);
+			line = mLines.get(linename);
+			line.addStationIndexToLine(stationIndex);
+			mLines.put(linename, line);
 		}
 	}
 	
 	public ArrayList<Integer> getStationIndexListByLine(String line) {
-		return metroLine.get(line);
+//		return metroLine.get(line);
+		return mLines.get(line).getStationIndexList();
 	}
 	
 	public void addStationToMap(Integer stationIndex, String stationName, HashSet<String> lines, String firstTrainTime, String lastTrainTime, int departureFrequency) {
@@ -142,7 +156,8 @@ public class MetroMap {
 		ArrayList<Integer> lineStationsIndex;
 		Integer sTailIndex, sTail2Index;
 		addStationToMetroLine(line, stationIndex);
-		lineStationsIndex = metroLine.get(line);
+//		lineStationsIndex = metroLine.get(line);
+		lineStationsIndex = mLines.get(line).getStationIndexList();
 		if (lineStationsIndex.size() > 1) {
 			sTailIndex = lineStationsIndex.get(lineStationsIndex.size()-1);
 			sTail2Index = lineStationsIndex.get(lineStationsIndex.size()-2);
@@ -155,9 +170,53 @@ public class MetroMap {
 	 * @return a compressed path consisting of staiton indecies with all cycles removed
 	 */
 	public ArrayList<Integer> compressStationIndexPath(List<Integer> stationIndexList, boolean firstInvocation) {
+		ArrayList<Integer> compressedList = new ArrayList<>();
+		Integer[] stationsIndexArray = (Integer[]) stationIndexList.toArray(new Integer[stationIndexList.size()]);
+		int headPointer = 0;
+		int tailPointer = stationIndexList.size()-1;
+		int headStationIndex, tailStationIndex;
+		HashSet<String> headLineSet, tailLineSet, intersectLineSet;
+		Station headStation, tailStation;
+		Connection rail;
+		
+		headStationIndex = stationsIndexArray[headPointer];
+		compressedList.add(headStationIndex);
+		while (headPointer < tailPointer) {
+			tailStationIndex = stationsIndexArray[tailPointer];
+			headStation = stationIndexTable.get(headStationIndex);
+			tailStation = stationIndexTable.get(tailStationIndex);
+			headLineSet = headStation.getLines();
+			tailLineSet = tailStation.getLines();
+			intersectLineSet = Utility.getSetIntersect(headLineSet, tailLineSet);
+			rail = graph.getEdge(headStationIndex, tailStationIndex);
+			/** If pointers are next to each other, check if stations are satellites **/ 
+			if (rail != null && rail.getLine() == Connection.SATELITE_CONNECTION_LINE) {
+				compressedList.add(tailStationIndex);
+				headPointer = tailPointer;
+				tailPointer = stationIndexList.size()-1;
+				headStationIndex = tailStationIndex;
+				tailStationIndex = stationsIndexArray[tailPointer];
+			/** Otherwise proper line change **/
+			} else if (!intersectLineSet.isEmpty()) {
+				compressedList.add(tailStationIndex);
+				headPointer = tailPointer;
+				tailPointer = stationIndexList.size()-1;
+				headStationIndex = tailStationIndex;
+				tailStationIndex = stationsIndexArray[tailPointer];
+			} else {
+				tailPointer--;
+			}
+		}
+////		System.out.println(stationIndexList);
+//		for (Integer i : stationIndexList) {
+//			Station s = stationIndexTable.get(i);
+////			System.out.println("         "+s.getName()+":"+s.getLines());
+//		}
+//		
 //		List<Integer> subList, recursedList;
 //		HashSet<String> headStationLineSet, stationLineSet, lineSetIntersect;
 //		Station station;
+//		Integer headStationIndex;
 //		ArrayList<Integer> compressedList = new ArrayList<>();
 //		int stationIndex;
 //		if (stationIndexList.size()==0) {
@@ -169,6 +228,7 @@ public class MetroMap {
 //		
 //		stationIndex = stationIndexList.get(0);
 //		station = stationIndexTable.get(stationIndex);
+//		headStationIndex = stationIndex;
 //		headStationLineSet = station.getLines();
 //		
 //		if (firstInvocation) {
@@ -180,7 +240,13 @@ public class MetroMap {
 //			stationLineSet = station.getLines();
 //			lineSetIntersect = (HashSet<String>) stationLineSet.clone();
 //			lineSetIntersect.retainAll(headStationLineSet);
-//			if (lineSetIntersect.size() > 0) {
+//			
+//			Connection rail = graph.getEdge(headStationIndex, stationIndex);
+//			int connectType = 0;
+//			if (rail != null) {
+//				connectType = rail.getConnectType();
+//			}
+//			if (lineSetIntersect.size() > 0 || connectType == Connection.SATELITE_CONNECTION) {
 //				// The longest continual metro line
 //				// Recursive call to add all compressed lines to currend list.
 //				if (!compressedList.contains(stationIndex)) {
@@ -218,29 +284,31 @@ public class MetroMap {
 //		}
 //		
 //		compressedList.add(stationIndexList.get(stationIndexList.size()-1));
-		ArrayList<Integer> compressedList = new ArrayList<Integer>();
-		Integer headpos, tailpos, headStationIndex, tailStationIndex;
-		Station headStation, tailStation;
-		HashSet<String> intersection;
-		headpos = 0;
-		tailpos = stationIndexList.size()-1;
+
 		
-		headStationIndex = stationIndexList.get(headpos);
-		compressedList.add(headStationIndex);
-		while (headpos != tailpos) {
-			tailStationIndex = stationIndexList.get(tailpos);
-			headStation = stationIndexTable.get(headStationIndex);
-			tailStation = stationIndexTable.get(tailStationIndex);
-			
-			intersection = Utility.getSetIntersect(headStation.getLines(), tailStation.getLines());
-			if (!intersection.isEmpty()) {
-				compressedList.add(tailStationIndex);
-				headpos = tailpos;
-				tailpos = stationIndexList.size()-1;
-			} else {
-				tailpos--;
-			}
-		}
+//		ArrayList<Integer> compressedList = new ArrayList<Integer>();
+//		Integer headpos, tailpos, headStationIndex, tailStationIndex;
+//		Station headStation, tailStation;
+//		HashSet<String> intersection;
+//		headpos = 0;
+//		tailpos = stationIndexList.size()-1;
+//		
+//		headStationIndex = stationIndexList.get(headpos);
+//		compressedList.add(headStationIndex);
+//		while (headpos != tailpos) {
+//			tailStationIndex = stationIndexList.get(tailpos);
+//			headStation = stationIndexTable.get(headStationIndex);
+//			tailStation = stationIndexTable.get(tailStationIndex);
+//			
+//			intersection = Utility.getSetIntersect(headStation.getLines(), tailStation.getLines());
+//			if (!intersection.isEmpty()) {
+//				compressedList.add(tailStationIndex);
+//				headpos = tailpos;
+//				tailpos = stationIndexList.size()-1;
+//			} else {
+//				tailpos--;
+//			}
+//		}
 		
 		
 		return compressedList;
@@ -268,17 +336,7 @@ public class MetroMap {
 				stationIndexList.add(s2Index);
 			}
 		}
-		
-		compressedIndexList = compressStationIndexPath(stationIndexList, true);
-		for (int i=1; i < compressedIndexList.size(); i++) {
-			station1 = stationIndexTable.get(compressedIndexList.get(i-1));
-			station2 = stationIndexTable.get(compressedIndexList.get(i));
-			metroLineSet = Utility.getSetIntersect(station1.getLines(), station2.getLines());
-			// Get a random line from the intersection
-			//metroLine = (String) metroLineSet.toArray()[0];
-			//sectionTime = getTravelTimeForLine(metroLine, station1.getIndex(), station2.getIndex());
-		}
-		
+
 		return stationIndexList;
 	}
 	
@@ -286,25 +344,7 @@ public class MetroMap {
 		MetroBuilder mb = new MetroBuilder();
 		mb.setDirectoryPath("./SubwayMaps/TokyoMetroMap/");
 		MetroMap mmap = mb.buildSubwayFromCSV();
-//		ArrayList<Integer> route = mmap.getQuickestRoute(1, 22);
-//		System.out.println(route);
-//		System.out.println(mmap.compressStationIndexPath(route, true));
-//		System.out.println(mmap.getStationByIndex(32).getLines());
-//		for (int i=1; i<=221; i++) {
-//			boolean die = false;
-//			for (int j=1; j<=221; j++) {
-//				if (mmap.getStationByIndex(i) != null && mmap.getStationByIndex(j) != null){
-//					System.out.println(i+":"+j);
-//					ArrayList<Integer> route = mmap.getQuickestRoute(i, j);
-//					if (route == null) {
-//						die = true;
-//						break;
-//					}
-//				}
-//			}
-//			if (die) {
-//				break;
-//			}
-//		}
+		ArrayList<Integer> path = mmap.getQuickestRoute(1, 128);
+		ArrayList<Integer> compressed = mmap.compressStationIndexPath(path,true);
 	}
 }
