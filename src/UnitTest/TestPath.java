@@ -76,7 +76,6 @@ public class TestPath extends TestInit {
 						lineSet = mmap.getStationByIndex(compressedPath.get(k)).getLines();
 						lineSetIntesect = getSetIntersect(lineSetPrev, lineSet);
 						/* 2. Test the current station and the previous station is linked by a similar line.*/
-						System.out.println(compressedPath.get(k-1)+":"+compressedPath.get(k)+"========"+lineSetPrev+":"+lineSet);
 						assertTrue(!lineSetIntesect.isEmpty());
 						if (addedLineSet.isEmpty()) {
 							addedLineSet.addAll(lineSetIntesect);
@@ -96,9 +95,6 @@ public class TestPath extends TestInit {
 							if (lineStationIndex.contains(compressedPath.get(k-1)) &&
 									lineStationIndex.contains(compressedPath.get(k))) {
 								connected = true;
-								System.out.print(compressedPath+"  ");
-								System.out.print(compressedPath.get(k-1)+":"+compressedPath.get(k));
-								System.out.println("  True");
 								break;
 							}
 						}

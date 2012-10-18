@@ -48,25 +48,43 @@ public class Route{
 	private void setupRouteVariables() {
 		Integer prevStationIndex = null;
 		Station s;
-		Connection rail;
+		Double timepersection = 0.0;
 		HashSet<String> intersectLineSet;
 		for (Integer stationIndex : path) {
 			s = mmap.getStationByIndex(stationIndex);
 			if (prevStationIndex == null) {
 				sectionTime.put(s.getName(), 0.0);
 			} else {
-				rail = mmap.getRail(prevStationIndex, stationIndex);
+//				rail = mmap.getRail(prevStationIndex, stationIndex);
+//				intersectLineSet = Utility.getSetIntersect(mmap.getStationByIndex(stationIndex).getLines(), 
+//														   mmap.getStationByIndex(prevStationIndex).getLines());
+//				
+//				sectionTime.put(s.getName(), rail.getTime());
+//				if (!intersectLineSet.isEmpty()) {
+//					sectionLines.put(s.getName(), (String)intersectLineSet.toArray()[0]);
+//				} else {
+//					sectionLines.put(s.getName(), Connection.SATELITE_CONNECTION_LINE);
+//				}
+//				
+//				TotalTime += rail.getTime();
 				intersectLineSet = Utility.getSetIntersect(mmap.getStationByIndex(stationIndex).getLines(), 
-														   mmap.getStationByIndex(prevStationIndex).getLines());
-				sectionTime.put(s.getName(), rail.getTime());
-				if (!intersectLineSet.isEmpty()) {
-					sectionLines.put(s.getName(), (String)intersectLineSet.toArray()[0]);
-				} else {
+						   								   mmap.getStationByIndex(prevStationIndex).getLines());
+				if (intersectLineSet.isEmpty()) {
 					sectionLines.put(s.getName(), Connection.SATELITE_CONNECTION_LINE);
+					sectionTime.put(s.getName(), 0.0);
+				} else {
+					for (String lineName : intersectLineSet) {
+						if (mmap.getMetroLine(lineName).getLineStationIndexList().contains(stationIndex) &&
+							mmap.getMetroLine(lineName).getLineStationIndexList().contains(prevStationIndex)) {
+							timepersection = mmap.getMetroLine(lineName).getTimeBetweenStation(stationIndex, prevStationIndex);
+							sectionLines.put(s.getName(), lineName);
+							sectionTime.put(s.getName(), timepersection);
+							break;
+						}
+					}
 				}
-				
-				TotalTime += rail.getTime();
 			}
+			TotalTime += timepersection;
 			prevStationIndex = stationIndex;
 		}
 	}
@@ -77,9 +95,7 @@ public class Route{
 		MetroMap mmap = mb.buildSubwayFromCSV();
 		Route r = new Route(mmap);
 		
-		
 		LinkedHashMap<String, Double> sectionTime = new LinkedHashMap<>();
-		System.out.println(sectionTime.keySet());
 	}
 	
 	

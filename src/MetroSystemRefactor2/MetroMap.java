@@ -41,11 +41,6 @@ public class MetroMap {
 		stationNameTable = new HashMap<String, Integer>();
 	}
 	
-	//TODO : implement it
-	public Double getTravelTimeForLine(String line ,Integer station1Index, Integer station2Index) {
-		return 1.1;
-	}
-	
 	public WeightedMultigraph<Integer, Connection> getMetroGraph() {
 		return graph;
 	}
@@ -213,9 +208,6 @@ public class MetroMap {
 	// TONY ADDED
 	public ArrayList<Integer> getQuickestRoute(Integer sStartIndex, Integer sEndIndex) {
 		Integer s1Index, s2Index;
-		Double sectionTime;
-		Station station1, station2;
-		String metroLine;
 		Route route;
 		ArrayList<Integer> stationIndexList, compressedIndexList;
 		ArrayList<Connection> railSet = (ArrayList<Connection>) DijkstraShortestPath.findPathBetween(graph, sStartIndex, sEndIndex);
@@ -234,7 +226,11 @@ public class MetroMap {
 		}
 
 		compressedIndexList = compressStationIndexPath(stationIndexList,true);
-		
+		route = new Route(this);
+		route.setPath(compressedIndexList);
+		System.out.println(route.getTotalTime());
+		System.out.println(route.getSectionTimes());
+		System.out.println(route.getSectionLines());
 		return stationIndexList;
 	}
 	
@@ -246,11 +242,8 @@ public class MetroMap {
 		MetroBuilder mb = new MetroBuilder();
 		mb.setDirectoryPath("./SubwayMaps/TokyoMetroMap/");
 		MetroMap mmap = mb.buildSubwayFromCSV();
-		ArrayList<Integer> path = mmap.getQuickestRoute(1, 128);
-		ArrayList<Integer> compressed = mmap.compressStationIndexPath(path,true);
-		
-		
-		System.out.println(mmap.getMetroLine("Z").getLineStationIndexList());
-		System.out.println(mmap.getMetroLine("Z").getTimeBetweenStation(1, 123));
+		int s1Index = mmap.getStationIndexByName("Nagatacho");
+		int s2Index = mmap.getStationIndexByName("Ginza");
+		ArrayList<Integer> path = mmap.getQuickestRoute(s1Index, s2Index);
 	}
 }

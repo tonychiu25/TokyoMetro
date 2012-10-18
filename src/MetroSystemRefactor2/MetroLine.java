@@ -2,6 +2,7 @@ package MetroSystemRefactor2;
 
 import java.util.ArrayList;
 
+import org.jgrapht.Graph;
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.graph.WeightedMultigraph;
 
@@ -33,27 +34,26 @@ public class MetroLine {
 	
 	public double getTimeBetweenStation(int s1Index, int s2Index) {
 		Integer prevStationIndex = null;
-		Connection c;
+		Connection c, cTmp;
 		double totalTime = 0;
 		if (!edgesSet) {
 			for (Integer stationIndex : stationIndexList) {
 				lineGraph.addVertex(stationIndex);
 				if (prevStationIndex != null) {
-					c = (Connection) mmap.getRail(prevStationIndex, stationIndex).clone();
-					lineGraph.addEdge(prevStationIndex, stationIndex, c);
-					lineGraph.setEdgeWeight(c, c.getTime());
+					cTmp = (Connection) mmap.getRail(prevStationIndex, stationIndex).clone();
+					lineGraph.addEdge(prevStationIndex, stationIndex, cTmp);
+					lineGraph.setEdgeWeight(cTmp, cTmp.getTime());
 				}
 				
 				prevStationIndex = stationIndex;
 				edgesSet = true;
 			}
-		} 
-			ArrayList<Connection> railSet = (ArrayList<Connection>) DijkstraShortestPath.findPathBetween(lineGraph, s1Index, s2Index);
+		}
 
-			for (Connection rail : railSet) {
-				totalTime += rail.getTime();
-			}
-		
+		ArrayList<Connection> railSet = (ArrayList<Connection>) DijkstraShortestPath.findPathBetween(lineGraph, s1Index, s2Index);
+		for (Connection rail : railSet) {
+			totalTime += rail.getTime();
+		}
 		
 		return totalTime;
 	}
@@ -62,7 +62,5 @@ public class MetroLine {
 		MetroBuilder mb = new MetroBuilder();
 		mb.setDirectoryPath("./SubwayMaps/TokyoMetroMap/");
 		MetroMap mmap = mb.buildSubwayFromCSV();
-		
-		System.out.println(mmap.getStationIndexListByLine("YM"));
 	}
 }
