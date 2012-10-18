@@ -185,7 +185,6 @@ public class MetroMap {
 			rail = graph.getEdge(headStationIndex, tailStationIndex);
 			/** If pointers are next to each other, check if stations are satellites **/ 
 			if (rail != null && rail.getLine() == Connection.SATELITE_CONNECTION_LINE) {
-				compressedList.add(stationsIndexArray[tailPointer]);
 				compressedList.add(tailStationIndex);
 				headPointer = tailPointer;
 				tailPointer = stationIndexList.size()-1;

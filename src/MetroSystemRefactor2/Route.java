@@ -69,7 +69,7 @@ public class Route{
 //				TotalTime += rail.getTime();
 				intersectLineSet = Utility.getSetIntersect(mmap.getStationByIndex(stationIndex).getLines(), 
 						   								   mmap.getStationByIndex(prevStationIndex).getLines());
-//				mmap.getRail(prevStationIndex, stationIndex).getLine();
+				
 				if (intersectLineSet.isEmpty()) {
 					sectionLines.put(s.getName(), Connection.SATELITE_CONNECTION_LINE);
 					sectionTime.put(s.getName(), 0.0);
