@@ -75,7 +75,7 @@ public class MetroMap {
 	
 	public ArrayList<Integer> getStationIndexListByLine(String line) {
 //		return metroLine.get(line);
-		return mLines.get(line).getStationIndexList();
+		return mLines.get(line).getLineStationIndexList();
 	}
 	
 	public void addStationToMap(Integer stationIndex, String stationName, HashSet<String> lines, String firstTrainTime, String lastTrainTime, int departureFrequency) {
@@ -156,8 +156,7 @@ public class MetroMap {
 		ArrayList<Integer> lineStationsIndex;
 		Integer sTailIndex, sTail2Index;
 		addStationToMetroLine(line, stationIndex);
-//		lineStationsIndex = metroLine.get(line);
-		lineStationsIndex = mLines.get(line).getStationIndexList();
+		lineStationsIndex = mLines.get(line).getLineStationIndexList();
 		if (lineStationsIndex.size() > 1) {
 			sTailIndex = lineStationsIndex.get(lineStationsIndex.size()-1);
 			sTail2Index = lineStationsIndex.get(lineStationsIndex.size()-2);
@@ -207,110 +206,7 @@ public class MetroMap {
 				tailPointer--;
 			}
 		}
-////		System.out.println(stationIndexList);
-//		for (Integer i : stationIndexList) {
-//			Station s = stationIndexTable.get(i);
-////			System.out.println("         "+s.getName()+":"+s.getLines());
-//		}
-//		
-//		List<Integer> subList, recursedList;
-//		HashSet<String> headStationLineSet, stationLineSet, lineSetIntersect;
-//		Station station;
-//		Integer headStationIndex;
-//		ArrayList<Integer> compressedList = new ArrayList<>();
-//		int stationIndex;
-//		if (stationIndexList.size()==0) {
-//			return new ArrayList<Integer>();
-//		} else if (stationIndexList.size() <= 2) {
-//			compressedList.addAll(stationIndexList);
-//			return compressedList;
-//		}
-//		
-//		stationIndex = stationIndexList.get(0);
-//		station = stationIndexTable.get(stationIndex);
-//		headStationIndex = stationIndex;
-//		headStationLineSet = station.getLines();
-//		
-//		if (firstInvocation) {
-//			compressedList.add(stationIndex);
-//		}
-//		for (int i=stationIndexList.size()-1; i>=0; i--) {
-//			stationIndex = stationIndexList.get(i);
-//			station = stationIndexTable.get(stationIndex);
-//			stationLineSet = station.getLines();
-//			lineSetIntersect = (HashSet<String>) stationLineSet.clone();
-//			lineSetIntersect.retainAll(headStationLineSet);
-//			
-//			Connection rail = graph.getEdge(headStationIndex, stationIndex);
-//			int connectType = 0;
-//			if (rail != null) {
-//				connectType = rail.getConnectType();
-//			}
-//			if (lineSetIntersect.size() > 0 || connectType == Connection.SATELITE_CONNECTION) {
-//				// The longest continual metro line
-//				// Recursive call to add all compressed lines to currend list.
-//				if (!compressedList.contains(stationIndex)) {
-//					compressedList.add(stationIndex);
-//				}
-//				subList = stationIndexList.subList(i, stationIndexList.size());
-//				recursedList = compressStationIndexPath(subList, false);
-//				//compressedList.addAll(recursedList);
-//				for (Integer sIndex :recursedList) {
-//					if (!compressedList.contains(sIndex)) {
-//						compressedList.add(sIndex);
-//					}
-//				}
-//				break;
-//			}
-//		}
-
-		
-//		ArrayList<Integer> compressedList = new ArrayList<Integer>();
-//		HashSet<String> stationLineIntersect, currStationLineSet;
-//		Station currStation;
-//		String line;
-//		
-//		currStation = stationIndexTable.get(stationIndexList.get(0));
-//		stationLineIntersect = Utility.getSetIntersect(currStation.getLines(), currStation.getLines());
-//		compressedList.add(currStation.getIndex());
-//		for (int i=1; i<stationIndexList.size(); i++) {
-//			currStationLineSet = stationIndexTable.get(stationIndexList.get(i)).getLines();
-//			stationLineIntersect = Utility.getSetIntersect(stationLineIntersect, currStationLineSet);
-//			if (stationLineIntersect.isEmpty()) {
-//				// Changed line
-//				compressedList.add(stationIndexList.get(i-1));
-//				stationLineIntersect = (HashSet<String>) stationIndexTable.get(stationIndexList.get(i-1)).getLines().clone();
-//			}
-//		}
-//		
-//		compressedList.add(stationIndexList.get(stationIndexList.size()-1));
-
-		
-//		ArrayList<Integer> compressedList = new ArrayList<Integer>();
-//		Integer headpos, tailpos, headStationIndex, tailStationIndex;
-//		Station headStation, tailStation;
-//		HashSet<String> intersection;
-//		headpos = 0;
-//		tailpos = stationIndexList.size()-1;
-//		
-//		headStationIndex = stationIndexList.get(headpos);
-//		compressedList.add(headStationIndex);
-//		while (headpos != tailpos) {
-//			tailStationIndex = stationIndexList.get(tailpos);
-//			headStation = stationIndexTable.get(headStationIndex);
-//			tailStation = stationIndexTable.get(tailStationIndex);
-//			
-//			intersection = Utility.getSetIntersect(headStation.getLines(), tailStation.getLines());
-//			if (!intersection.isEmpty()) {
-//				compressedList.add(tailStationIndex);
-//				headpos = tailpos;
-//				tailpos = stationIndexList.size()-1;
-//			} else {
-//				tailpos--;
-//			}
-//		}
-		
-		
+	
 		return compressedList;
 	}
 	
@@ -320,8 +216,8 @@ public class MetroMap {
 		Double sectionTime;
 		Station station1, station2;
 		String metroLine;
+		Route route;
 		ArrayList<Integer> stationIndexList, compressedIndexList;
-		HashSet<String> metroLineSet;
 		ArrayList<Connection> railSet = (ArrayList<Connection>) DijkstraShortestPath.findPathBetween(graph, sStartIndex, sEndIndex);
 		
 		stationIndexList = new ArrayList<Integer>();
@@ -337,7 +233,13 @@ public class MetroMap {
 			}
 		}
 
+		compressedIndexList = compressStationIndexPath(stationIndexList,true);
+		
 		return stationIndexList;
+	}
+	
+	public MetroLine getMetroLine(String lineName) {
+		return mLines.get(lineName);
 	}
 	
 	public static void main(String args[]) throws Exception {		
@@ -346,5 +248,9 @@ public class MetroMap {
 		MetroMap mmap = mb.buildSubwayFromCSV();
 		ArrayList<Integer> path = mmap.getQuickestRoute(1, 128);
 		ArrayList<Integer> compressed = mmap.compressStationIndexPath(path,true);
+		
+		
+		System.out.println(mmap.getMetroLine("Z").getLineStationIndexList());
+		System.out.println(mmap.getMetroLine("Z").getTimeBetweenStation(1, 123));
 	}
 }

@@ -44,7 +44,7 @@ public class TestStationConnection extends TestInit{
 		for (Integer s1Index : mmap.getMetroGraph().vertexSet()) {
 			for (Integer s2Index : mmap.getMetroGraph().vertexSet()) {
 				if (s1Index != s2Index) {
-					assertNotNull(mmap.getQuickestRoute(s1Index, s2Index));
+					assertTrue(mmap.getQuickestRoute(s1Index, s2Index).size() >= 2);
 				}
 			}
 		}

@@ -24,42 +24,50 @@ public class Route{
 		TotalTime = 0;
 	}
 	
+	public LinkedHashMap<String, String> getSectionLines() {
+		return sectionLines;
+	}
+	
+	public LinkedHashMap<String, Double> getSectionTimes() {
+		return sectionTime;
+	}
+	
 	public void setPath(ArrayList<Integer> p) {
 		path = p;
+		setupRouteVariables();
 	}
 	
 	public LinkedHashMap<String, Double> getSectionStationsTimes() {
 		return sectionTime;
 	}
 	
-	public void setupRouteVariables() {
-		Integer s1Index, s2Index;
-		Station s1, s2;
-		HashSet<String> commonLines;
-		ArrayList<Integer> stationIndexList;
-		String line;
-		double time;
-		
-		s1 = mmap.getStationByIndex(path.get(0));
-		sectionTime.put(s1.getName(), 0.0);
-		for (int i=1; i < path.size()-1; i++) {
-			s1Index = path.get(i-1);
-			s2Index = path.get(i);
-			s1 = mmap.getStationByIndex(s1Index);
-			s2 = mmap.getStationByIndex(s2Index);
-			time = mmap.getRail(s1Index, s2Index).getTime();
-			
-			commonLines = Utility.getSetIntersect(s1.getLines(), s2.getLines());
-			if (!commonLines.isEmpty()) {
-				int timeToStart, timeToEnd, timeTotal;
-				
-				line = (String) commonLines.toArray()[0];
-				stationIndexList = mmap.getStationIndexListByLine(line);
-				
-				
+	public double getTotalTime() {
+		return TotalTime;
+	}
+	
+	private void setupRouteVariables() {
+		Integer prevStationIndex = null;
+		Station s;
+		Connection rail;
+		HashSet<String> intersectLineSet;
+		for (Integer stationIndex : path) {
+			s = mmap.getStationByIndex(stationIndex);
+			if (prevStationIndex == null) {
+				sectionTime.put(s.getName(), 0.0);
 			} else {
-				sectionTime.put(s2.getName(), 0.0);
+				rail = mmap.getRail(prevStationIndex, stationIndex);
+				intersectLineSet = Utility.getSetIntersect(mmap.getStationByIndex(stationIndex).getLines(), 
+														   mmap.getStationByIndex(prevStationIndex).getLines());
+				sectionTime.put(s.getName(), rail.getTime());
+				if (!intersectLineSet.isEmpty()) {
+					sectionLines.put(s.getName(), (String)intersectLineSet.toArray()[0]);
+				} else {
+					sectionLines.put(s.getName(), Connection.SATELITE_CONNECTION_LINE);
+				}
+				
+				TotalTime += rail.getTime();
 			}
+			prevStationIndex = stationIndex;
 		}
 	}
 	
