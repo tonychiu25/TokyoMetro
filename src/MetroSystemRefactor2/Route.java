@@ -54,22 +54,10 @@ public class Route{
 			s = mmap.getStationByIndex(stationIndex);
 			if (prevStationIndex == null) {
 				sectionTime.put(s.getName(), 0.0);
+				sectionLines.put("Undecided", "Undecided");
 			} else {
-//				rail = mmap.getRail(prevStationIndex, stationIndex);
-//				intersectLineSet = Utility.getSetIntersect(mmap.getStationByIndex(stationIndex).getLines(), 
-//														   mmap.getStationByIndex(prevStationIndex).getLines());
-//				
-//				sectionTime.put(s.getName(), rail.getTime());
-//				if (!intersectLineSet.isEmpty()) {
-//					sectionLines.put(s.getName(), (String)intersectLineSet.toArray()[0]);
-//				} else {
-//					sectionLines.put(s.getName(), Connection.SATELITE_CONNECTION_LINE);
-//				}
-//				
-//				TotalTime += rail.getTime();
 				intersectLineSet = Utility.getSetIntersect(mmap.getStationByIndex(stationIndex).getLines(), 
 						   								   mmap.getStationByIndex(prevStationIndex).getLines());
-				
 				if (intersectLineSet.isEmpty()) {
 					sectionLines.put(s.getName(), Connection.SATELITE_CONNECTION_LINE);
 					sectionTime.put(s.getName(), 0.0);
@@ -78,8 +66,12 @@ public class Route{
 						if (mmap.getMetroLine(lineName).getLineStationIndexList().contains(stationIndex) &&
 							mmap.getMetroLine(lineName).getLineStationIndexList().contains(prevStationIndex)) {
 							timepersection = mmap.getMetroLine(lineName).getTimeBetweenStation(stationIndex, prevStationIndex);
-							sectionLines.put(s.getName(), lineName);
 							sectionTime.put(s.getName(), timepersection);
+							if (timepersection == 0) {
+								sectionLines.put(s.getName(), Connection.SATELITE_CONNECTION_LINE);
+							} else {
+								sectionLines.put(s.getName(), lineName);
+							}
 							break;
 						}
 					}

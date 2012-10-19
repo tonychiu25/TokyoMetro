@@ -73,19 +73,6 @@ public class MetroMap {
 		return mLines.get(line).getLineStationIndexList();
 	}
 	
-	public void addStationToMap(Integer stationIndex, String stationName, HashSet<String> lines, String firstTrainTime, String lastTrainTime, int departureFrequency) {
-		TerminalStation newTerminalStation;
-		if (!stationIndexTable.containsKey(stationIndex)) {
-			newTerminalStation = new TerminalStation(stationIndex, stationName, firstTrainTime, lastTrainTime, departureFrequency);
-			for (String l : lines) {
-				newTerminalStation.addLine(l);
-			}
-			stationIndexTable.put(stationIndex, newTerminalStation);
-			stationNameTable.put(stationName, stationIndex);
-			graph.addVertex(stationIndex);
-		}
-	}
-	
 	public void addStationToMap(Integer stationIndex, String stationName, HashSet<String> lines) {
 		Station newStation;
 		if (!stationIndexTable.containsKey(stationIndex)) {
@@ -185,6 +172,7 @@ public class MetroMap {
 			rail = graph.getEdge(headStationIndex, tailStationIndex);
 			/** If pointers are next to each other, check if stations are satellites **/ 
 			if (rail != null && rail.getLine() == Connection.SATELITE_CONNECTION_LINE) {
+				compressedList.add(stationsIndexArray[tailPointer]);
 				compressedList.add(tailStationIndex);
 				headPointer = tailPointer;
 				tailPointer = stationIndexList.size()-1;
@@ -201,7 +189,7 @@ public class MetroMap {
 				tailPointer--;
 			}
 		}
-	
+		
 		return compressedList;
 	}
 	
@@ -242,8 +230,8 @@ public class MetroMap {
 		MetroBuilder mb = new MetroBuilder();
 		mb.setDirectoryPath("./SubwayMaps/TokyoMetroMap/");
 		MetroMap mmap = mb.buildSubwayFromCSV();
-		int s1Index = mmap.getStationIndexByName("Nagatacho");
-		int s2Index = mmap.getStationIndexByName("Ginza");
+		int s1Index = mmap.getStationIndexByName("Wakoshi");
+		int s2Index = mmap.getStationIndexByName("Shinjuku");
 		ArrayList<Integer> path = mmap.getQuickestRoute(s1Index, s2Index);
 	}
 }

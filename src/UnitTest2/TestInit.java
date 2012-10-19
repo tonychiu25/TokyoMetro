@@ -57,6 +57,9 @@ public class TestInit {
 				expectStationLines.put(stationName, stationLines);
 				addedStations.add(stationName);
 				lineStations.add(stationName);
+				
+				System.out.println(line+ " : " +stationName);
+				
 				if (!nextLine[5].isEmpty()) {
 					satelliteStations = nextLine[5];
 					HashSet<String> satelliteTmp = new HashSet<>();

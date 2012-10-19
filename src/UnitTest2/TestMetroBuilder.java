@@ -30,8 +30,9 @@ public class TestMetroBuilder extends TestInit{
 		Station station;
 		for (Integer stationIndex : mmap.getMetroGraph().vertexSet()) {
 			station = mmap.getStationByIndex(stationIndex);
-			assertTrue(!addedStationSet.contains(station.getName()));
-			addedStationSet.add(station.getName());
+			System.out.println(station.getName());
+			assertTrue(!addedStationSet.contains(station.getName().toLowerCase()));
+			addedStationSet.add(station.getName().toLowerCase());
 		}
 	}
 	
